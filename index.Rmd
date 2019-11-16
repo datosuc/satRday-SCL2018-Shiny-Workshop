@@ -776,3 +776,19 @@ las cuales son fácil de integrar con shiny
 - https://rstudio.github.io/shinydashboard/
 - https://rinterface.com/
 
+---
+
+class: center, middle, inverse
+
+# Ejercicio #3
+
+---
+
+# Transformando script R en una App
+
+<br>
+
+- Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/script-export.R .
+- Generar una app que tenga como input una lista de países y
+muestre el forecast de las exportaciones de dicho país.
+
