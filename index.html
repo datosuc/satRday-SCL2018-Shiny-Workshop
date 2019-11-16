@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
   <head>
-    <title>Workshop Creación de aplicaciones interactivas con Shiny</title>
-    <meta charset="utf-8">
-    <meta name="author" content="Joshua Kunst" />
+    <title>Visualizacion de datos con R: Shiny</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Mauricio Pachá Vargas &amp; Joshua Kunst" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
@@ -13,9 +13,9 @@
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# Workshop<br>Creación de aplicaciones<br>interactivas con Shiny
-## satRday Santiago 2018
-### Joshua Kunst
+# Visualizacion de datos con R: Shiny
+## Diplomado en Data Science, MatPUC
+### Mauricio Pachá Vargas &amp; Joshua Kunst
 
 ---
 
@@ -49,13 +49,8 @@ install.packages(
 ```
 
 
-La prestación podrá acceder desde http://jbkunst.github.io/satRday-SCL2018-Shiny-Workshop y el código fuentes,
-apps, ejemplos en https://github.com/jbkunst/satRday-SCL2018-Shiny-Workshop
-
-
-Esto no es más que el comienzo; abordaremos lo necesario para que tu puedas avanzar 
-más más allá!!
-
+La prestación podrá acceder desde https://github.com/datosuc/Visualizacion-de-datos-con-R y el código fuente,
+apps, ejemplos en https://github.com/datosuc/Visualizacion-de-datos-con-R/tree/master/apps
 
 ---
 
@@ -118,6 +113,12 @@ server &lt;- function(input, output) {}
 runApp(list(ui = ui, server = server)) 
 ```
 
+&lt;br&gt;
+
+En `shiny`, una aplicación constará de **2** partes:
+
+- La interfaz de usuario, `ui` (user interface), donde definiremos el look de nuestra aplicación, y lugar de  `inputs` y `outputs`.
+- El `server`, en donde especificaremos como interactuan los `outputs` en función de los `inputs`.
 
 ---
 
@@ -141,9 +142,12 @@ runApp(list(ui = ui, server = server))
 &lt;br&gt;
 
 - Se define una interfaz de usuario (user interface). En adelante `ui`
-- En este caso es una página fluida vacía `fluidPage()`
+- En este caso es una página fluida vacía `fluidPage()`.
+
+
+
 - En el futuro acá definiremos diseño/estructura de nuestra aplicación (_layout_).
-Que se refiere la disposición de nuestros `inputs` y `outputs`
+Que se refiere la disposición de nuestros `inputs` y `outputs`.
 
 
 
@@ -167,7 +171,8 @@ runApp(list(ui = ui, server = server))
 &lt;br&gt;
 
 - Se define el `server` en donde estará toda la lógica de nuestra aplicación.
-- Principalmente serán instrucciones que dependeran de `inputs` 
+- Principalmente serán instrucciones que dependeran de `inputs` y
+reflejaremos `outputs`: como tablas, gráficos.
 
 
 ---
@@ -192,7 +197,7 @@ server &lt;- function(input, output) {}
 - `runApp` es la funcion que crea y deja corriendo la app con los 
 parámetros otorgados.
 - **No siempre** tendremos que escribirla pues veremos que RStudio
-al crear una shinyApp nos pondrá un botón para _servir_ la aplicación
+al crear una shinyApp nos pondrá un botón para _servir_ la aplicación.
 
 
 ---
@@ -207,8 +212,11 @@ class: center, middle, inverse
 
 Hacer funcionar el siguiente `código` en R Rstudio: (hint: sí, copy + paste + run) 
 
+.code70[
 
 ```r
+library(shiny)
+
 ui &lt;- fluidPage(
    sidebarLayout(
       sidebarPanel(
@@ -229,7 +237,10 @@ server &lt;- function(input, output) {
      plot(x, type = t, col = input$col)
    })
 }
+
+shinyApp(ui, server)
 ```
+]
 
 ---
 
@@ -341,9 +352,9 @@ server &lt;- function(input, output) {
 ]
 
 - `fluidPage`, `sidebarLayout`, `sidebarPanel`, `mainPanel` definen el diseño/_layout_ de nuestra
-app
+app.
 -  Existen muchas más formas de organizar una app: Por ejemplo uso de _tabs_ de _menus_, o páginas
-con navegación. Más detalles http://shiny.rstudio.com/articles/layout-guide.html
+con navegación. Más detalles http://shiny.rstudio.com/articles/layout-guide.html.
 
 
 ---
@@ -377,10 +388,10 @@ server &lt;- function(input, output) {
 ]
 
 - `sliderInput`, `selectInput`, `checkboxInput` son los inputs de nuestra app,
-con esto el usuario puede interactuar con nuestra aplicación
+con esto el usuario puede interactuar con nuestra aplicación (https://shiny.rstudio.com/gallery/widget-gallery.html).
 - Estas funciones generan el input deseado en la app y shiny perminte que los
 valores de estos inputs sean usados como valores usuales en R en la parte del server
-(numericos, strings, booleanos, fechas)
+(numericos, strings, booleanos, fechas).
 
 ---
 
@@ -412,8 +423,8 @@ server &lt;- function(input, output) {
 ```
 ]
 
-- `plotOutput` define el lugar donde la salida estará
-- Como mencionamos, nuestras app ueden tener muchos outputs: tablas, texto, imágenes
+- `plotOutput` define el lugar donde la salida estará.
+- Como mencionamos, nuestras app ueden tener muchos outputs: tablas, texto, imágenes.
 
 
 ---
@@ -446,9 +457,9 @@ server &lt;- function(input, output) {
 ```
 ]
 
-- `renderPlot` define un tipo de salida gráfica
+- `renderPlot` define un tipo de salida gráfica.
 - Existen otros tipos de salidas, como tablas `tableOutput` o tablas más interactivas como 
-`DT::DTOutput`
+`DT::DTOutput`.
 
 
 ---
@@ -481,8 +492,8 @@ server &lt;- function(input, output) {
 ```
 ]
 
-- Este espacio determina la lógica de nuestra salida 
-- Acá haremos uso de los inputs para entregar lo que deseamos
+- Este espacio determina la lógica de nuestra salida.
+- Acá haremos uso de los inputs para entregar lo que deseamos.
 
 
 ---
@@ -628,7 +639,7 @@ server &lt;- function(input, output) {
 - `sliderInput` se usa para seleccionar un valor numérico entre un rango 
 - `selectInput` otorga la posibildad que el usuario escoge entre un conjunto de valores
 - `checkboxInput` en el server es un valor lógico `TRUE`/`FALSE`
-- ¿Necesitas más? https://gallery.shinyapps.io/065-update-input-demo/ y `shinyWidgets::shinyWidgetsGallery()` 
+- ¿Necesitas más? https://gallery.shinyapps.io/065-update-input-demo/ y http://shinyapps.dreamrs.fr/shinyWidgets/ 
 
 
 ---
@@ -658,7 +669,7 @@ Hints importantes:
 
 - No tema a escribir, ni preguntar!
 - Está totalmente permitido equivocarse, de hecho se pondrán puntos extras
-- Posible solución estará en https://github.com/jbkunst/satRday-SCL2018-Shiny-Workshop/tree/master/apps/02-ejercicio-2
+- Posible solución estará en https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/02-ejercicio-2/app.R
 
 
 ---
@@ -720,6 +731,7 @@ El más usuado, generalmente los inputs están agrupados a mano izquierda y
 
 Los tabs son útiles para separar secciones en nuestra app
 
+.code70[
 
 ```r
 library(shiny)
@@ -734,7 +746,7 @@ ui &lt;- fluidPage(
       tabsetPanel(
         tabPanel("Plot", plotOutput("plot")),
         tabPanel("Summary", verbatimTextOutput("summary")),
-        tabPanel("Table", "tabla")
+        tabPanel("Table", tableOutput("tabla"))
       )
     )
   )
@@ -743,33 +755,12 @@ ui &lt;- fluidPage(
 server &lt;- function(input, output) {
   output$plot &lt;- renderPlot({ hist(rnorm(input$obs)) })
   output$summary &lt;- renderText({ input$obs })
+  output$tabla &lt;- renderTable({ data.frame(input$obs) })
 }
 
 shinyApp(ui, server)
 ```
-
-```
-## 
-## Listening on http://127.0.0.1:8577
-```
-
-```
-## 
-## 
-## processing file: index.Rmd
-```
-
-```
-## &lt;simpleError in parse_block(g[-1], g[1], params.src): duplicate label 'setup'&gt;
-```
-
-```
-## 
-## * Retrying in 2 seconds...
-```
-
-![](index_files/figure-html/unnamed-chunk-13-1.png)&lt;!-- --&gt;
-
+]
 
 ---
 
@@ -784,11 +775,24 @@ Los tabs son útiles para separar secciones en nuestra app
 
 # HTMLWidgets
 
+&lt;br&gt;
+
+- HTMLWidgets son un tipo de paquetes que nos permiten realizar visualizaciones en HTML
+las cuales son fácil de integrar con shiny
+- Existen una gran cantida de paquetes https://gallery.htmlwidgets.org/
+
 
 ---
 
-#
+# Mas opciones de interfaces
+
+
+&lt;br&gt;
+
+- https://rstudio.github.io/shinydashboard/
+- https://rinterface.com/
     </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "ratio": "16:9",
@@ -799,16 +803,74 @@ Los tabs son útiles para separar secciones en nuestra app
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));
 });
-(function() {
-  var d = document, s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
   if (!r) return;
   s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
   d.head.appendChild(s);
-})();</script>
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
 
 <script>
 (function() {
-  var i, text, code, codes = document.getElementsByTagName('code');
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
   for (i = 0; i < codes.length;) {
     code = codes[i];
     if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
@@ -822,7 +884,8 @@ if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
     }
     i++;
   }
-})();
+};
+slideshow._releaseMath(document);
 </script>
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>

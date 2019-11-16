@@ -1,7 +1,7 @@
 .title-slide {
-  background-image: url("shiny.png"), url("satrday30.png");
-  background-size:  17%, 25%, cover;
-  background-position: 88% 16%, 70% 10%;
+  background-image: url("shiny.png"), url("ggplot2.png");
+  background-size:  17%, 17%, cover;
+  background-position: 88% 16%, 78% 65%;
   background-repeat: no-repeat;
 }
 

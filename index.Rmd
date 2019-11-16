@@ -1,7 +1,7 @@
 ---
-title: "Workshop<br>Creación de aplicaciones<br>interactivas con Shiny"
-subtitle: "satRday Santiago 2018"
-author: "Joshua Kunst"
+title: "Visualizacion de datos con R: Shiny"
+subtitle: "Diplomado en Data Science, MatPUC"
+author: "Mauricio Pachá Vargas & Joshua Kunst"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -45,13 +45,8 @@ install.packages(
 ```
 
 
-La prestación podrá acceder desde http://jbkunst.github.io/satRday-SCL2018-Shiny-Workshop y el código fuentes,
-apps, ejemplos en https://github.com/jbkunst/satRday-SCL2018-Shiny-Workshop
-
-
-Esto no es más que el comienzo; abordaremos lo necesario para que tu puedas avanzar 
-más más allá!!
-
+La prestación podrá acceder desde https://github.com/datosuc/Visualizacion-de-datos-con-R y el código fuente,
+apps, ejemplos en https://github.com/datosuc/Visualizacion-de-datos-con-R/tree/master/apps
 
 ---
 
@@ -113,6 +108,12 @@ server <- function(input, output) {}
 runApp(list(ui = ui, server = server)) 
 ```
 
+<br>
+
+En `shiny`, una aplicación constará de **2** partes:
+
+- La interfaz de usuario, `ui` (user interface), donde definiremos el look de nuestra aplicación, y lugar de  `inputs` y `outputs`.
+- El `server`, en donde especificaremos como interactuan los `outputs` en función de los `inputs`.
 
 ---
 
@@ -135,9 +136,12 @@ runApp(list(ui = ui, server = server))
 <br>
 
 - Se define una interfaz de usuario (user interface). En adelante `ui`
-- En este caso es una página fluida vacía `fluidPage()`
+- En este caso es una página fluida vacía `fluidPage()`.
+
+
+
 - En el futuro acá definiremos diseño/estructura de nuestra aplicación (_layout_).
-Que se refiere la disposición de nuestros `inputs` y `outputs`
+Que se refiere la disposición de nuestros `inputs` y `outputs`.
 
 
 
@@ -160,7 +164,8 @@ runApp(list(ui = ui, server = server))
 <br>
 
 - Se define el `server` en donde estará toda la lógica de nuestra aplicación.
-- Principalmente serán instrucciones que dependeran de `inputs` 
+- Principalmente serán instrucciones que dependeran de `inputs` y
+reflejaremos `outputs`: como tablas, gráficos.
 
 
 ---
@@ -184,7 +189,7 @@ runApp(list(ui = ui, server = server))       #<<
 - `runApp` es la funcion que crea y deja corriendo la app con los 
 parámetros otorgados.
 - **No siempre** tendremos que escribirla pues veremos que RStudio
-al crear una shinyApp nos pondrá un botón para _servir_ la aplicación
+al crear una shinyApp nos pondrá un botón para _servir_ la aplicación.
 
 
 ---
@@ -199,7 +204,10 @@ class: center, middle, inverse
 
 Hacer funcionar el siguiente `código` en R Rstudio: (hint: sí, copy + paste + run) 
 
+.code70[
 ```{r, eval=FALSE}
+library(shiny)
+
 ui <- fluidPage(
    sidebarLayout(
       sidebarPanel(
@@ -220,7 +228,10 @@ server <- function(input, output) {
      plot(x, type = t, col = input$col)
    })
 }
+
+shinyApp(ui, server)
 ```
+]
 
 ---
 
@@ -330,9 +341,9 @@ server <- function(input, output) {
 ]
 
 - `fluidPage`, `sidebarLayout`, `sidebarPanel`, `mainPanel` definen el diseño/_layout_ de nuestra
-app
+app.
 -  Existen muchas más formas de organizar una app: Por ejemplo uso de _tabs_ de _menus_, o páginas
-con navegación. Más detalles http://shiny.rstudio.com/articles/layout-guide.html
+con navegación. Más detalles http://shiny.rstudio.com/articles/layout-guide.html.
 
 
 ---
@@ -365,10 +376,10 @@ server <- function(input, output) {
 ]
 
 - `sliderInput`, `selectInput`, `checkboxInput` son los inputs de nuestra app,
-con esto el usuario puede interactuar con nuestra aplicación
+con esto el usuario puede interactuar con nuestra aplicación (https://shiny.rstudio.com/gallery/widget-gallery.html).
 - Estas funciones generan el input deseado en la app y shiny perminte que los
 valores de estos inputs sean usados como valores usuales en R en la parte del server
-(numericos, strings, booleanos, fechas)
+(numericos, strings, booleanos, fechas).
 
 ---
 
@@ -399,8 +410,8 @@ server <- function(input, output) {
 ``` 
 ]
 
-- `plotOutput` define el lugar donde la salida estará
-- Como mencionamos, nuestras app ueden tener muchos outputs: tablas, texto, imágenes
+- `plotOutput` define el lugar donde la salida estará.
+- Como mencionamos, nuestras app ueden tener muchos outputs: tablas, texto, imágenes.
 
 
 ---
@@ -432,9 +443,9 @@ server <- function(input, output) {
 ``` 
 ]
 
-- `renderPlot` define un tipo de salida gráfica
+- `renderPlot` define un tipo de salida gráfica.
 - Existen otros tipos de salidas, como tablas `tableOutput` o tablas más interactivas como 
-`DT::DTOutput`
+`DT::DTOutput`.
 
 
 ---
@@ -466,8 +477,8 @@ server <- function(input, output) {
 ``` 
 ]
 
-- Este espacio determina la lógica de nuestra salida 
-- Acá haremos uso de los inputs para entregar lo que deseamos
+- Este espacio determina la lógica de nuestra salida.
+- Acá haremos uso de los inputs para entregar lo que deseamos.
 
 
 ---
@@ -613,7 +624,7 @@ server <- function(input, output) {
 - `sliderInput` se usa para seleccionar un valor numérico entre un rango 
 - `selectInput` otorga la posibildad que el usuario escoge entre un conjunto de valores
 - `checkboxInput` en el server es un valor lógico `TRUE`/`FALSE`
-- ¿Necesitas más? https://gallery.shinyapps.io/065-update-input-demo/ y `shinyWidgets::shinyWidgetsGallery()` 
+- ¿Necesitas más? https://gallery.shinyapps.io/065-update-input-demo/ y http://shinyapps.dreamrs.fr/shinyWidgets/ 
 
 
 ---
@@ -643,7 +654,7 @@ Hints importantes:
 
 - No tema a escribir, ni preguntar!
 - Está totalmente permitido equivocarse, de hecho se pondrán puntos extras
-- Posible solución estará en https://github.com/jbkunst/satRday-SCL2018-Shiny-Workshop/tree/master/apps/02-ejercicio-2
+- Posible solución estará en https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/02-ejercicio-2/app.R
 
 
 ---
@@ -705,7 +716,8 @@ El más usuado, generalmente los inputs están agrupados a mano izquierda y
 
 Los tabs son útiles para separar secciones en nuestra app
 
-```{r}
+.code70[
+```{r, eval=FALSE}
 library(shiny)
 
 ui <- fluidPage(
@@ -718,7 +730,7 @@ ui <- fluidPage(
       tabsetPanel(
         tabPanel("Plot", plotOutput("plot")),
         tabPanel("Summary", verbatimTextOutput("summary")),
-        tabPanel("Table", "tabla")
+        tabPanel("Table", tableOutput("tabla"))
       )
     )
   )
@@ -727,11 +739,12 @@ ui <- fluidPage(
 server <- function(input, output) {
   output$plot <- renderPlot({ hist(rnorm(input$obs)) })
   output$summary <- renderText({ input$obs })
+  output$tabla <- renderTable({ data.frame(input$obs) })
 }
 
 shinyApp(ui, server)
 ```
-
+]
 
 ---
 
@@ -746,8 +759,20 @@ Los tabs son útiles para separar secciones en nuestra app
 
 # HTMLWidgets
 
+<br>
+
+- HTMLWidgets son un tipo de paquetes que nos permiten realizar visualizaciones en HTML
+las cuales son fácil de integrar con shiny
+- Existen una gran cantida de paquetes https://gallery.htmlwidgets.org/
+
 
 ---
 
-#
+# Mas opciones de interfaces
+
+
+<br>
+
+- https://rstudio.github.io/shinydashboard/
+- https://rinterface.com/
 
