@@ -804,9 +804,43 @@ class: center, middle, inverse
 
 &lt;br&gt;
 
-- Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/script-export.R .
+- Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/script-export.R (la siguiente slide tambien lo tiene).
 - Generar una app que tenga como input una lista de países y
 muestre el forecast de las exportaciones de dicho país.
+
+---
+
+# Codigo
+
+.code70[
+
+```r
+if(!require(forecast)) install.packages("forecast")
+if(!require(xts)) install.packages("xts")
+if(!require(tradestatistic)) install.packages("tradestatistic")
+if(!require(ggplot2)) install.packages("ggplot2")
+
+library(forecast)
+library(xts)
+library(tradestatistics)
+library(ggplot2)
+
+pais &lt;- "chn"
+
+data &lt;- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+
+valores &lt;- data$export_value_usd
+fechas &lt;- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
+
+serie &lt;- xts(valores, order.by = fechas)
+prediccion &lt;- forecast(serie, h = 5)
+
+# IMPORTANTE: estas predicciones no *son las mas mejores* la idea  
+# del ejercicio es imaginar que tenemos un proceso el 
+# cual transformaremos en una app
+autoplot(prediccion)
+```
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
