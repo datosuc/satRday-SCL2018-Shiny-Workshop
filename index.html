@@ -751,7 +751,7 @@ ui &lt;- fluidPage(
     )
   )
 )
-
+inf
 server &lt;- function(input, output) {
   output$plot &lt;- renderPlot({ hist(rnorm(input$obs)) })
   output$summary &lt;- renderText({ input$obs })
