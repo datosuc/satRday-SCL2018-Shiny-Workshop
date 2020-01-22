@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<html lang="" xml:lang="">
   <head>
     <title>Visualizacion de datos con R: Shiny</title>
     <meta charset="utf-8" />
@@ -810,14 +810,14 @@ muestre el forecast de las exportaciones de dicho país.
 
 ---
 
-# Codigo
+# Código
 
 .code70[
 
 ```r
 if(!require(forecast)) install.packages("forecast")
 if(!require(xts)) install.packages("xts")
-if(!require(tradestatistic)) install.packages("tradestatistic")
+if(!require(tradestatistics)) install.packages("tradestatistics")
 if(!require(ggplot2)) install.packages("ggplot2")
 
 library(forecast)
@@ -825,15 +825,16 @@ library(xts)
 library(tradestatistics)
 library(ggplot2)
 
-pais &lt;- "chn"
+pais &lt;- "chn"  # seteo pais
 
 data &lt;- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
 
 valores &lt;- data$export_value_usd
 fechas &lt;- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
 
-serie &lt;- xts(valores, order.by = fechas)
-prediccion &lt;- forecast(serie, h = 5)
+serie &lt;- xts(valores, order.by = fechas) # creo la serie de tiempo para la fucion forecast
+
+prediccion &lt;- forecast(serie, h = 5) # realizo automágicamente una predicción
 
 # IMPORTANTE: estas predicciones no *son las mas mejores* la idea  
 # del ejercicio es imaginar que tenemos un proceso el 

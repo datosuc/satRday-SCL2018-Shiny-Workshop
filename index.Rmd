@@ -794,13 +794,13 @@ muestre el forecast de las exportaciones de dicho país.
 
 ---
 
-# Codigo
+# Código
 
 .code70[
 ```{r, eval=FALSE}
 if(!require(forecast)) install.packages("forecast")
 if(!require(xts)) install.packages("xts")
-if(!require(tradestatistic)) install.packages("tradestatistic")
+if(!require(tradestatistics)) install.packages("tradestatistics")
 if(!require(ggplot2)) install.packages("ggplot2")
 
 library(forecast)
@@ -808,15 +808,16 @@ library(xts)
 library(tradestatistics)
 library(ggplot2)
 
-pais <- "chn"
+pais <- "chn"  # seteo pais
 
 data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
 
 valores <- data$export_value_usd
 fechas <- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
 
-serie <- xts(valores, order.by = fechas)
-prediccion <- forecast(serie, h = 5)
+serie <- xts(valores, order.by = fechas) # creo la serie de tiempo para la fucion forecast
+
+prediccion <- forecast(serie, h = 5) # realizo automágicamente una predicción
 
 # IMPORTANTE: estas predicciones no *son las mas mejores* la idea  
 # del ejercicio es imaginar que tenemos un proceso el 
