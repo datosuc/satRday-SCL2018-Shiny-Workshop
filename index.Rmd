@@ -1,7 +1,7 @@
 ---
 title: "Visualizacion de datos con R: Shiny"
 subtitle: "Diplomado en Data Science, MatPUC"
-author: "Mauricio Pachá Vargas & Joshua Kunst"
+author: "Joshua Kunst"
 output:
   xaringan::moon_reader:
     lib_dir: libs
