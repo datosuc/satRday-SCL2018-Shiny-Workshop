@@ -661,7 +661,7 @@ Hints importantes:
 
 class: center, middle, inverse
 
-# Layouts, HTMLWidgets y Diseño
+# Algunos Layouts
 
 ---
 
@@ -755,6 +755,13 @@ Los tabs son útiles para separar secciones en nuestra app
 ![](imgs/tabs.png)
 
 
+
+---
+
+class: center, middle, inverse
+
+# HTMLWidgets
+
 ---
 
 # HTMLWidgets
@@ -768,19 +775,9 @@ las cuales son fácil de integrar con shiny
 
 ---
 
-# Mas opciones de interfaces
-
-
-<br>
-
-- https://rstudio.github.io/shinydashboard/
-- https://rinterface.com/
-
----
-
 class: center, middle, inverse
 
-# Ejercicio #3 y #3version2
+# Ejercicio #3 con yapa
 
 ---
 
@@ -861,7 +858,6 @@ d %>%
   group_by(year(fecha)) %>% 
   summarise(valor_mean = mean(valor)) %>% 
   DT::datatable()
-
 ```
 ]
 
