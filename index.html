@@ -7,7 +7,7 @@
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
-    <link rel="stylesheet" href="assets\custom.css" type="text/css" />
+    <link rel="stylesheet" href="assets/custom.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
@@ -796,7 +796,7 @@ las cuales son fácil de integrar con shiny
 
 class: center, middle, inverse
 
-# Ejercicio #3
+# Ejercicio #3 y #3version2
 
 ---
 
@@ -840,6 +840,45 @@ prediccion &lt;- forecast(serie, h = 5) # realizo automágicamente una predicci�
 # del ejercicio es imaginar que tenemos un proceso el 
 # cual transformaremos en una app
 autoplot(prediccion)
+```
+]
+
+---
+
+# Transformando script R en una App 2
+
+&lt;br&gt;
+
+- Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/script-export-2.R (la siguiente slide tambien lo tiene).
+- Generar una app que tenga como input una lista de indicadores y selector de fechas y
+generar el gráfico.
+- Utilice tabs para mostrar información adicional como resumentes por año.
+- Utilizar `shinywidgets` para agregar otras opciones para el usuario.
+
+---
+
+# Código
+
+.code70[
+
+```r
+if(!require(tidyverse)) install.packages("tidyverse")
+if(!require(mindicador)) install.packages("mindicador")
+if(!require(highcharter)) install.packages("highcharter")
+if(!require(DT)) install.packages("DT")
+
+library(tidyverse)
+library(lubridate)
+library(ggplot2)
+
+d &lt;- mindicador::mindicador_importar_datos("uf", anios = 2015:2020)
+
+hchart(d, "line", hcaes(fecha, valor))
+
+d %&gt;% 
+  group_by(year(fecha)) %&gt;% 
+  summarise(valor_mean = mean(valor)) %&gt;% 
+  DT::datatable()
 ```
 ]
     </textarea>
