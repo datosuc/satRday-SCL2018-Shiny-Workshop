@@ -52,18 +52,17 @@ apps, ejemplos en https://github.com/datosuc/Visualizacion-de-datos-con-R/tree/m
 
 # Ayuda
 
-
 No olvidar que una buena forma de aprender es con la documentación oficial:
 
 
-https://shiny.rstudio.com/tutorial/
+- https://shiny.rstudio.com/tutorial/
+- https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/
+- https://github.com/rstudio/cheatsheets/raw/master/shiny.pdf
+- https://github.com/rstudio/cheatsheets/raw/master/translations/spanish/shiny_Spanish.pdf
 
-https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/
+La infaltable chuleta: 
 
-https://github.com/rstudio/cheatsheets/raw/master/shiny.pdf
-
-https://github.com/rstudio/cheatsheets/raw/master/translations/spanish/shiny_Spanish.pdf
-
+https://content.cdntwrk.com/files/aT0xMTI0NDEzJnY9MSZpc3N1ZU5hbWU9c2hpbnktc3BhbmlzaCZjbWQ9ZCZzaWc9ZTdhMThkY2VjYzM1YjkyNmI1NTVlNWM3ZWViNjE4MmU%253D
 
 ---
 
@@ -80,8 +79,6 @@ a un servidor web a través de internet o de una intranet mediante un navegador.
 
 
 ![](imgs/miprimerapp.png)
-
-
 
 ---
 
@@ -191,16 +188,9 @@ parámetros otorgados.
 - **No siempre** tendremos que escribirla pues veremos que RStudio
 al crear una shinyApp nos pondrá un botón para _servir_ la aplicación.
 
-
 ---
 
-class: center, middle, inverse
-
-# Ejercicio #1
-
----
-
-# Nuestra primer App andando
+# Ejercicio: Nuestra primer App andando
 
 Hacer funcionar el siguiente `código` en R Rstudio: (hint: sí, copy + paste + run) 
 
@@ -480,13 +470,6 @@ server <- function(input, output) {
 - Este espacio determina la lógica de nuestra salida.
 - Acá haremos uso de los inputs para entregar lo que deseamos.
 
-
----
-
-class: center, middle, inverse
-
-# Interacción entre inputs y outputs
-
 ---
 
 # La estructura de una ShinyApp 2
@@ -626,17 +609,9 @@ server <- function(input, output) {
 - `checkboxInput` en el server es un valor lógico `TRUE`/`FALSE`
 - ¿Necesitas más? https://gallery.shinyapps.io/065-update-input-demo/ y http://shinyapps.dreamrs.fr/shinyWidgets/ 
 
-
 ---
 
-class: center, middle, inverse
-
-# Ejercicio #2
-
-
----
-
-# Inputs y outputs vengan a mi!
+# Ejercicio: Inputs y outputs vengan a mi!
 
 
 Haga click en:
@@ -661,7 +636,7 @@ Hints importantes:
 
 class: center, middle, inverse
 
-# Algunos Layouts
+# Layouts
 
 ---
 
@@ -671,7 +646,7 @@ class: center, middle, inverse
 Dependiendo de las necesidaes puede ser convenientes algunos
 tipos de layuts sobre otros
 
-Recorreremos algunos más comunes
+Recorreremos algunos más comunes cono el sidebarLayout y tabsetPanel.
 
 
 ---
@@ -769,19 +744,20 @@ class: center, middle, inverse
 <br>
 
 - HTMLWidgets son un tipo de paquetes que nos permiten realizar visualizaciones en HTML
-las cuales son fácil de integrar con shiny
+las cuales son fácil de integrar con shiny y también rmarkdown.
 - Existen una gran cantida de paquetes https://gallery.htmlwidgets.org/
+- Son -entonces- paquetes para complementar nuestra aplicación.
+
+<br>
+
+Cada paquete HTMLWidget tiene su propio set de funciones, el código utilizado 
+para hacer un gráfico en plotly no es el mismo (pero generalmente muy similar)
+al utilizado en highcharter, echarts4r. 
 
 
 ---
 
-class: center, middle, inverse
-
-# Ejercicio #3 con yapa
-
----
-
-# Transformando script R en una App
+# Ejercicio: Transformando script R en una App
 
 <br>
 
@@ -825,7 +801,7 @@ autoplot(prediccion)
 
 ---
 
-# Transformando script R en una App 2
+# Ejercicio: Transformando script R en una App 2
 
 <br>
 
@@ -834,6 +810,7 @@ autoplot(prediccion)
 generar el gráfico.
 - Utilice tabs para mostrar información adicional como resumentes por año.
 - Utilizar `shinywidgets` para agregar otras opciones para el usuario.
+- Implemente al menos un `htmlwidget`.
 
 ---
 
@@ -861,4 +838,213 @@ d %>%
 ```
 ]
 
+
+---
+
+class: center, middle, inverse
+
+# Repaso resumido
+
+---
+
+# Repaso resumido
+
+- Una shiny app consta de dos partes:
+  - `ui` (**u**ser **i**nterface) donde definiremos el lugar de los los `input`s que 
+  el usuario podrá controlar, como también el lugar de donte estarán los `output`s que retornemos.
+  - `server` (**server** XD), donde definiremos que retornaremos en cada output dependiendo de los inputs.
+
+<hr>
+
+- Los inputs de forma general son de la forma `tipoInput("nombreinput", parametros_del_inpout)`, por ejemplo
+`sliderInput("valor", min = 1, max = 10, value = 1)`.
+- En el server accedo al valor del input como `input$nombreinput`. 
+
+
+<hr>
+
+- Un output se define en la interfaz (gráfico, tabla, mapa, texto) con la forma `tipoOutput("nombreoutput")`, por ejemplo si quiero una salida/output tipo gráfico se usa `plotOutput("grafico")`
+- Para enviar un grafico en el server se usa: `output$nombreoutput <- renderTipo({ codigo })`, por ejemplo:
+
+`output$grafico <- renderPlot({ plot(rnorm(input$valor), type = "l") })`
+
+---
+
+# Repaso resumido
+
+<br>
+
+Así nuestra app de repaso quedaría:
+
+```r
+library(shiny)
+
+# Antes del ui y server podemos cargar paquetes
+# o datos que nuestra app usará. No tiene por que ser todo
+# tan simple
+
+ui <- fluidPage(
+  sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1),
+  plotOutput("grafico")
+  )
+
+server <- function(input, output) {
+  output$grafico <- renderPlot({ 
+    plot(rnorm(input$valor), type = "l")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+---
+
+class: center, middle, inverse
+
+# Temas & Estilos
+
+---
+
+# Temas & Estilos
+
+- Al principio todas nuestras app son similares.
+- Existen extensiones/paquetes que permiten cambiar el estilo/look de la aplicación.
+
+![](imgs/shinyapps.gif)
+
+
+
+---
+
+# shinythemes
+
+Los más fácil de implementar, sin tan alto impacto en código ni imagen.
+
+![](imgs/shinythemes.png)
+
+---
+
+# shinythemes
+
+Antes:
+
+```r
+library(shiny)
+
+ui <- fluidPage(
+   sidebarLayout(...
+```
+
+Ahora:
+
+```r
+library(shiny)
+library(shinythemes)
+
+ui <- fluidPage(
+   theme = shinytheme("superhero"),
+   sidebarLayout(...
+```
+
+**NOTAR** que este cambio es solo en la parte ui. La parte del server no cambia.
+
+---
+
+# shinydashboard
+
+Orientados a __dashboards__<span class="fragment"> agrega más funcionalidades</span>
+
+![](https://rstudio.github.io/shinydashboard/images/crandash.png)
+
+---
+
+# shinydashboard
+
+```r
+library(shinydashboard)
+
+ui <- dashboardPage(
+  dashboardHeader(),
+  dashboardSidebar(
+     sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1)
+  ),
+  dashboardBody(
+    fluidRow(box(width = 12, plotOutput("grafico")))
+  )
+)
+```
+
+---
+
+# Más y más templates y diseños
+
+- shinydashboardPlus: https://rinterface.com/shiny/shinydashboardPlus/
+- bs4Dash: https://rinterface.com/shiny/bs4Dash/classic/
+- miniUI2Demo: https://dgranjon.shinyapps.io/miniUI2Demo
+- tablerDash: https://rinterface.com/shiny/tablerDash/
+
+
+---
+
+# Ejercicio: Aplicar temas
+
+- Tomar la última app de y probar por al menos 2 temas (recomiendo *paper*) de `shinythemes`:
+- Modifcar el ui utilizando el ejemplo de `shinydashboard` (copy+paste).
+
+```r
+library(shiny)
+
+ui <- fluidPage(
+  sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1),
+  plotOutput("grafico")
+  )
+
+server <- function(input, output) {
+  output$grafico <- renderPlot({ 
+    plot(rnorm(input$valor), type = "l")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+---
+
+class: center, middle, inverse
+
+# Publicar/Compartir tu app
+
+---
+
+# Publicar/Compartir tu app
+
+<br> 
+
+La forma más sencilla de compartir una app es:
+
+- Crear una cuenta en https://www.shinyapps.io/ (puedes asociar tu correo gmail)
+- Luego crear una app.
+- `rsconnect::deployApp("<ruta_a_la_aplicacion>")`, o:
+
+![](imgs/publicar_screenshot_1.png)
+
+---
+
+# Ejercicio: Intentado usar todo
+
+<br>
+
+- Cree un proyecto en RStudio y una shinyapp.
+- Descargue el archivo http://datos.gob.cl/dataset/33353
+- Procese el archivo anterior para obtener un .rds o un csv más limpio.
+- Ahora que su aplicación considere tener un selector de comunas, y que su 
+aplicación retorne un mapa con las ubicaciones de los lugares de cargasbip
+de la comuna seleccionada usando como template el primer ejemplo de https://rstudio.github.io/leaflet/markers.html y https://rstudio.github.io/leaflet/shiny.html
+- Subir una aplicación a shinyapps.io
+
+---
+
+class: center, middle, inverse
+
+# Optimizando código
 

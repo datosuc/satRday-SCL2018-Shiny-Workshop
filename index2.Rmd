@@ -79,12 +79,11 @@ Paquete R para __X-13ARIMA-SEATS__ http://www.seasonal.website/
 
 class: center, middle, inverse
 
-# Repaso de la clase anterior
+# Repaso resumido
 
 ---
 
-# Repaso clase anterior
-
+# Repaso resumido
 
 - Una shiny app consta de dos partes:
   - `ui` (**u**ser **i**nterface) donde definiremos el lugar de los los `input`s que el usuario podrá controlar, como también el lugar de donte estarán los `output`s que retornemos.
@@ -107,7 +106,7 @@ particular en est ejmplo será númerico.
 
 ---
 
-# Repaso clase anterior
+# Repaso resumido
 
 <br>
 
@@ -133,18 +132,6 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
-
----
-
-class: center, middle, inverse
-
-# Ejercicio 1: Calculadora
-
----
-
-# Ejercicio 1
-
-...
 
 ---
 
@@ -225,13 +212,21 @@ ui <- dashboardPage(
 
 ---
 
+# Más y más templates y diseños
+
+- shinydashboardPlus: https://rinterface.com/shiny/shinydashboardPlus/
+- bs4Dash: https://rinterface.com/shiny/bs4Dash/classic/
+- miniUI2Demo: https://dgranjon.shinyapps.io/miniUI2Demo
+- tablerDash: https://rinterface.com/shiny/tablerDash/
+---
+
 class: center, middle, inverse
 
-# Ejercicio 2: Aplicar temas
+# Ejercicio: Aplicar temas
 
 ---
 
-# Ejercicio 2
+# Ejercicio Ejercicio 2
 
 - Tomar la app de repaso y probar por al menos 2 temas (recomiendo *paper*) de `shinythemes`:
 - Modifcar el ui utilizando el ejemplo de `shinydashboard` (copy+paste).
@@ -278,24 +273,17 @@ La forma más sencilla de compartir una app es:
 
 class: center, middle, inverse
 
-# Ejercicio 3: Subir una aplicación
+# Ejercicio: Subir una aplicación
 
 ---
 
 class: center, middle, inverse
 
-# Ejercicio 3: Subir una aplicación
+# Ejercicio: Remotando todo lo anteior
 
 ---
 
-
-class: center, middle, inverse
-
-# Ejercicio 4: The FINAL BOSS
-
----
-
-# Ejercicio 4
+# Ejercicio: Remotando todo lo anteior
 
 <br>
 
