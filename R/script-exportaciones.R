@@ -9,8 +9,9 @@ library(tradestatistics)
 library(ggplot2)
 
 
-pais <- "chn"  # seteo pais
-data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+pais  <- "chn"  # seteo pais
+rango <- 1990:2015
+data <- ots_create_tidy_data(years = rango, reporters = pais , table = "yr")
 
 str(data)
 
@@ -26,4 +27,4 @@ prediccion
 # IMPORTANTE: estas predicciones no *son las mas mejores* la idea  
 # del ejercicio es imaginar que tenemos un proceso el 
 # cual transformaremos en una app
-autoplot(prediccion)
+autoplot(prediccion) + labs(title = pais, x = rango)
