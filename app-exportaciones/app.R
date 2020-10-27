@@ -3,7 +3,13 @@ library(forecast)
 library(xts)
 library(tradestatistics)
 library(ggplot2)
+library(scales)
 
+formatear_monto <- function(monto){
+    
+    paste("$", comma(monto/1e6, accuracy = .01), "MM")
+    
+}
 
 ui <- fluidPage(
     sidebarLayout(
@@ -22,8 +28,9 @@ server <- function(input, output) {
     output$grafico <- renderPlot({
         
         # plot(1:10, main = input$pais)
-        
+
         pais <- input$pais
+        # pais <- "chl"        
         
         data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
         
@@ -34,7 +41,17 @@ server <- function(input, output) {
         
         prediccion <- forecast(serie, h = 5) 
         
-        autoplot(prediccion)
+        plt <- autoplot(prediccion) 
+           
+        plt +
+            scale_y_continuous(labels = formatear_monto) +
+            labs(
+                x = "Año",
+                y = NULL,
+                title = pais,
+                subtitle = "Acá va un subtitulo",
+                caption = "Datos provenientes del paquete {tradestatistics}."
+            )
       
     })
 }
