@@ -4,6 +4,7 @@ library(xts)
 library(tradestatistics)
 library(ggplot2)
 library(scales)
+library(plotly)
 
 formatear_monto <- function(monto){
     
@@ -11,13 +12,25 @@ formatear_monto <- function(monto){
     
 }
 
+
+lista_paises <- setNames(
+  ots_countries$country_iso,
+  ots_countries$country_name_english
+)
+
+
 ui <- fluidPage(
     sidebarLayout(
         sidebarPanel(
-            selectInput("pais", "Seleccionar un país:", choices = c("chn", "chl", "arg"))
+            selectInput(
+                "pais",
+                "Seleccionar un país:",
+                choices = lista_paises,
+                selected = "chl"
+                )
         ),
         mainPanel(
-            plotOutput("grafico")
+          plotlyOutput("grafico")
         )
     )
 )
@@ -25,7 +38,7 @@ ui <- fluidPage(
 
 server <- function(input, output) {
 
-    output$grafico <- renderPlot({
+    output$grafico <- renderPlotly({
         
         # plot(1:10, main = input$pais)
 
@@ -36,14 +49,21 @@ server <- function(input, output) {
         
         valores <- data$export_value_usd
         fechas <- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
-        
         serie <- xts(valores, order.by = fechas) 
-        
         prediccion <- forecast(serie, h = 5) 
         
-        plt <- autoplot(prediccion) 
-           
-        plt +
+        dfpred <- as.data.frame(prediccion)
+        dfpred <- dfpred %>% 
+          mutate(anio = 2018 + 1:5)
+        
+        plt <- ggplot(data) +
+          geom_line(aes(x = year, y = export_value_usd)) +
+          geom_line(aes(x = anio, y = `Point Forecast`), data = dfpred, color = "darkred", size  = 1.2) +
+          geom_ribbon(
+            aes(x = anio, ymin = `Lo 95`, ymax = `Hi 95`),
+            data = dfpred, 
+            alpha = 0.25
+            ) +
             scale_y_continuous(labels = formatear_monto) +
             labs(
                 x = "Año",
@@ -52,6 +72,10 @@ server <- function(input, output) {
                 subtitle = "Acá va un subtitulo",
                 caption = "Datos provenientes del paquete {tradestatistics}."
             )
+        
+        plt
+        
+        ggplotly(plt)
       
     })
 }
