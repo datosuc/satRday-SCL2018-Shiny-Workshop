@@ -1294,7 +1294,7 @@ otorgará puntos los que pueden ayudar a compensar puntos no terminados.
 - Puede revisar la lista de indicadores con `mindicador::mindicador_indicadores$codigo`.
 - recuerde que existe `dateInput` y `dateRangeInput`.
 
-Enviar a más tardar el martes 10 de noviembre el script y el link de la aplicación
+Enviar a más tardar el domingo 15 de noviembre el script y el link de la aplicación
 al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección B** Indicando en el cuerpo del mail
 los integrantes (a lo más 2). 
 
