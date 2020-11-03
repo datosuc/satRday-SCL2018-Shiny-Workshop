@@ -995,7 +995,7 @@ La forma más sencilla de compartir una app es:
 <br>
 
 - Cree un proyecto en RStudio y una shinyapp.
-- Descargue el archivo http://datos.gob.cl/dataset/33353
+- Descargue el archivo http://datos.gob.cl/dataset/28198 (puntos bip, si es que el link se rompe)
 - Procese el archivo anterior para obtener un .rds o un csv más limpio.
 - Ahora que su aplicación considere tener un selector de comunas, y que su 
 aplicación retorne un mapa con las ubicaciones de los lugares de cargasbip
@@ -1281,7 +1281,7 @@ DT::datatable(d)
 # Cree una shinyapp que:
 
 - Le permita al usuario escoger que indicador a estudiar.
-- La aplicación debe mostgrar a travéz de un gráfio la variación del indicador
+- La aplicación debe mostrar a travéz de un gráfico la variación del indicador
 respecto al tiempo.
 - Además le debe permitir al usuario la posibilidad de escoger las fechas a visualizar.
 - Mostrar una tabla con los datos utlizados para el gráficos.
@@ -1295,6 +1295,6 @@ otorgará puntos los que pueden ayudar a compensar puntos no terminados.
 - recuerde que existe `dateInput` y `dateRangeInput`.
 
 Enviar a más tardar el martes 10 de noviembre el script y el link de la aplicación
-al correo con el asunto **Evaluación shiny Sección B** Indicando en el cuerpo del mail
+al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección B** Indicando en el cuerpo del mail
 los integrantes (a lo más 2). 
 
