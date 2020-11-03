@@ -1179,6 +1179,183 @@ server &lt;- function(input, output) {
 
 ```
 ]
+
+Pueden revisar el código en:
+
+- https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/app-exportaciones/app.R
+- https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/app-exportaciones/app-reactive-expression.R
+
+
+---
+
+# Memoización
+
+(_Wikipedia_) 
+En Informática, el término memoización (del inglés memoization) es una técnica 
+de optimización que se usa principalmente para acelerar los tiempos de cálculo,
+almacenando los resultados de la llamada a una subrutina en una memoria intermedia
+o búfer y devolviendo esos mismos valores cuando se llame de nuevo a la subrutina
+o función con los mismos parámetros de entrada.
+
+Supongamos la eterna función:
+
+
+```r
+gran_funcion &lt;- function(valor){
+  Sys.sleep(sample(5:10, size = 1))
+  2 * valor 
+}
+
+gran_funcion(1)
+```
+
+```
+## [1] 2
+```
+
+```r
+system.time({gran_funcion(1)})
+```
+
+```
+##    user  system elapsed 
+##    0.02    0.00    8.04
+```
+
+---
+
+# Memoización (cont)
+
+En R existe el paquete `memoise` el cual ayuda a _memoizar_ funciones:
+
+
+
+```r
+library(memoise)
+
+gran_funcion_memoizada &lt;- memoise(gran_funcion)
+
+gran_funcion_memoizada(1)
+```
+
+```
+## [1] 2
+```
+
+```r
+gran_funcion_memoizada(1) == gran_funcion(1)
+```
+
+```
+## [1] TRUE
+```
+
+```r
+system.time({gran_funcion_memoizada(1)})
+```
+
+```
+##    user  system elapsed 
+##       0       0       0
+```
+
+```r
+gran_funcion_memoizada
+```
+
+```
+## Memoised Function:
+## function(valor){
+##   Sys.sleep(sample(5:10, size = 1))
+##   2 * valor 
+## }
+## &lt;bytecode: 0x0000000017a7d188&gt;
+```
+
+
+---
+
+# Memoización (cont 2)
+
+En R existe el paquete `memoise` el cual ayuda a _memoizar_ funciones:
+
+Internamente lo que hace es:
+
+- En la primera vez que se ejecuta la funcion memoizada debe utilizar la función
+original para conocer su valor.
+- Luego guarda el valor del output (para una próxima ejecución de la función) asociándolo
+a los valores/parámetros.
+- En una futura ocación al ejecutar la función memoizada con un parámetro ya ejecutado, 
+en lugar de ejecutar la función original recupera anteriormente guardado.
+
+Comentarios y cuidados:
+- La función debe ser determinística, debe retornar siempre un valor fijo, ya sea un modelo,
+vector, etc (piense en memoizar `runif`).
+- Existen funciones que la memoización dura cierto
+- Recordar que esto no es exclusivo para shiny apps, ni para R.
+
+
+---
+
+class: center, middle, inverse
+
+# Evaluación
+
+---
+
+# Evaluación
+
+Con el siguiente script:
+
+
+.code70[
+
+```r
+if(!require(tidyverse)) install.packages("tidyverse")
+if(!require(mindicador)) install.packages("mindicador")
+if(!require(highcharter)) install.packages("highcharter")
+if(!require(DT)) install.packages("DT")
+
+library(tidyverse); library(lubridate); library(ggplot2)
+
+d &lt;- mindicador::mindicador_importar_datos("uf", anios = 2015:2020)
+
+hchart(d, "line", hcaes(fecha, valor)) 
+
+ggplot(d) +
+  geom_line(aes(fecha, valor))
+
+dres &lt;- d %&gt;% 
+  group_by(year(fecha)) %&gt;% 
+  summarise(valor_mean = mean(valor)) 
+
+d
+
+DT::datatable(d)
+```
+]
+
+---
+
+# Cree una shinyapp que:
+
+- Le permita al usuario escoger que indicador a estudiar.
+- La aplicación debe mostgrar a travéz de un gráfio la variación del indicador
+respecto al tiempo.
+- Además le debe permitir al usuario la posibilidad de escoger las fechas a visualizar.
+- Mostrar una tabla con los datos utlizados para el gráficos.
+- Utilizar algun paquete para cambiar el look de la aplicación.
+- Finalmente utilice el servicio gratuiro de shinyapps.io para publicar la aplicación.
+
+Importante/hints:
+- No se pide ningún paquete en particular, pero el ir utilizando más paquetes _pomposos_
+otorgará puntos los que pueden ayudar a compensar puntos no terminados. 
+- Puede revisar la lista de indicadores con `mindicador::mindicador_indicadores$codigo`.
+- recuerde que existe `dateInput` y `dateRangeInput`.
+
+Enviar a más tardar el martes 10 de noviembre el script y el link de la aplicación
+al correo con el asunto **Evaluación shiny Sección B** Indicando en el cuerpo del mail
+los integrantes (a lo más 2).
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
