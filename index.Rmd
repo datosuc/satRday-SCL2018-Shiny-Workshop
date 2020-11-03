@@ -801,46 +801,6 @@ autoplot(prediccion)
 
 ---
 
-# Ejercicio: Transformando script R en una App 2
-
-<br>
-
-- Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/script-export-2.R (la siguiente slide tambien lo tiene).
-- Generar una app que tenga como input una lista de indicadores y selector de fechas y
-generar el gráfico.
-- Utilice tabs para mostrar información adicional como resumentes por año.
-- Utilizar `shinywidgets` para agregar otras opciones para el usuario.
-- Implemente al menos un `htmlwidget`.
-
----
-
-# Código
-
-.code70[
-```{r, eval=FALSE}
-if(!require(tidyverse)) install.packages("tidyverse")
-if(!require(mindicador)) install.packages("mindicador")
-if(!require(highcharter)) install.packages("highcharter")
-if(!require(DT)) install.packages("DT")
-
-library(tidyverse)
-library(lubridate)
-library(ggplot2)
-
-d <- mindicador::mindicador_importar_datos("uf", anios = 2015:2020)
-
-hchart(d, "line", hcaes(fecha, valor))
-
-d %>% 
-  group_by(year(fecha)) %>% 
-  summarise(valor_mean = mean(valor)) %>% 
-  DT::datatable()
-```
-]
-
-
----
-
 class: center, middle, inverse
 
 # Repaso resumido
@@ -918,7 +878,7 @@ class: center, middle, inverse
 
 # shinythemes
 
-Los más fácil de implementar, sin tan alto impacto en código ni imagen.
+Los más fácil de implementar, sin tan alto impacto en código ni imagen. Opciones en http://bootswatch.com/
 
 ![](imgs/shinythemes.png)
 
@@ -1048,3 +1008,157 @@ class: center, middle, inverse
 
 # Optimizando código
 
+---
+
+# Optimizando código
+
+Tomemos el ejemplo anterior de graficar y consideremos una opción para mostrar
+el eje en escala logaritmica
+
+
+.code60[
+```r
+library(shiny)
+library(forecast)
+library(xts)
+library(tradestatistics)
+library(ggplot2)
+library(scales)
+library(plotly)
+library(shinythemes)
+
+formatear_monto <- function(monto){
+    paste("$", comma(monto/1e6, accuracy = .01), "MM")
+}
+
+lista_paises <- setNames(ots_countries$country_iso, ots_countries$country_name_english)
+
+ui <- fluidPage(
+    theme = shinytheme("cyborg"), 
+    titlePanel("Ahora si que sí"),
+    sidebarLayout(
+        sidebarPanel(
+            selectInput("pais", "Seleccionar un país:", choices = lista_paises, selected = "chl"),
+            checkboxInput("log", label = "Escala en log")    #<<
+        ),
+        mainPanel(
+          plotlyOutput("grafico")
+        )
+    )
+)
+```
+]
+
+
+---
+
+# Optimizando código (cont.)
+
+
+.code60[
+```r
+server <- function(input, output) {
+    output$grafico <- renderPlotly({
+        pais <- input$pais
+        data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+        valores <- data$export_value_usd
+        fechas <- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
+        serie <- xts(valores, order.by = fechas) 
+        prediccion <- forecast(serie, h = 5) 
+        dfpred <- as.data.frame(prediccion)
+        dfpred <- dfpred %>% mutate(anio = 2018 + 1:5)
+        
+        plt <- ggplot(data) +
+          geom_line(aes(x = year, y = export_value_usd)) +
+          geom_line(aes(x = anio, y = `Point Forecast`), data = dfpred, color = "darkred", size  = 1.2) +
+          geom_ribbon(aes(x = anio, ymin = `Lo 95`, ymax = `Hi 95`), data = dfpred, alpha = 0.25) +\
+          scale_y_continuous(labels = formatear_monto) +
+          labs(x = "Año", y = NULL, title = pais, subtitle = "Acá va un subtitulo",
+                caption = "Datos provenientes del paquete {tradestatistics}.")
+        
+        if(input$log){                    #<<
+          plt <- plt + scale_y_log10()    #<<
+        }
+        
+        ggplotly(plt)
+      
+    })
+    
+}
+
+shinyApp(ui = ui, server = server)
+
+```
+]
+
+
+---
+
+# Expresiones reactivas (_reactive expressions_)
+
+La idea de expresiones reactiva es que podemos limitar que es lo que se (re)ejecuta
+al cambiar un input.
+
+Una expresión reactiva es código R que usa un widget/input y retorna un valor, 
+la expresion se actualizará cuando el valor del (de los) widgets cambien.
+
+Se crea una expresion con la función `reactive` la que toma una expresión/código R
+entre `{}`, de la misma forma que las funciones `render` (`renderPlot`, `renderTable`)
+
+Así, por ejemplo ejemplo, para evitar correr código si solamente queremos cambiar
+elementos del gráfico una solución usando expresiones reactivas sería.
+
+.code60[
+```r
+
+server <- function(input, output) {
+  
+    dataExport <- reactive({
+      
+      pais <- input$pais
+      data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+      data
+      
+    })
+    
+    output$grafico <- renderPlotly({
+        
+        data <- dataExport()
+        
+    
+    output
+
+```
+]
+
+---
+
+# Expresiones reactivas (_reactive expressions_) (cont.)
+
+Recordar que no necesariamente se puedes utilizar en **una** expresion, por ejemplo
+si queremos usar el data frame para realizar una tabla podríamos hacer:
+
+.code60[
+```r
+
+server <- function(input, output) {
+  
+    dataExport <- reactive({
+      
+      pais <- input$pais
+      data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+      data
+      
+    })
+    
+    output$tabla <- renderTable({ dataExport()  })
+    
+    output$grafico <- renderPlotly({
+        
+        data <- dataExport()
+        
+    
+    output
+
+```
+]

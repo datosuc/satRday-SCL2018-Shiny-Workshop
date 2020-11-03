@@ -34,22 +34,30 @@ ui <- fluidPage(
             checkboxInput("log", label = "Escala en log")
         ),
         mainPanel(
-          plotlyOutput("grafico")
+          plotlyOutput("grafico"),
+          tableOutput("tabla")
         )
     )
 )
 
 
 server <- function(input, output) {
+  
+    dataExport <- reactive({
+      
+      pais <- input$pais
+      
+      data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+      
+      data
+      
+    })
+    
+    output$tabla <- renderTable({ dataExport()  })
 
     output$grafico <- renderPlotly({
         
-        # plot(1:10, main = input$pais)
-
-        pais <- input$pais
-        # pais <- "chl"        
-        
-        data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+        data <- dataExport()
         
         valores <- data$export_value_usd
         fechas <- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
@@ -72,7 +80,6 @@ server <- function(input, output) {
             labs(
                 x = "Año",
                 y = NULL,
-                title = pais,
                 subtitle = "Acá va un subtitulo",
                 caption = "Datos provenientes del paquete {tradestatistics}."
             )
@@ -80,8 +87,6 @@ server <- function(input, output) {
         if(input$log){
           plt <- plt + scale_y_log10(labels = formatear_monto)
         }
-        
-        plt
         
         ggplotly(plt)
       
