@@ -1,18 +1,20 @@
 library(shiny)
+library(tidyverse)
 library(forecast)
 library(xts)
 library(tradestatistics)
-library(ggplot2)
-library(scales)
-library(plotly)
+library(highcharter)
 library(shinythemes)
+library(memoise)
+library(DT)
+
+ots_create_tidy_data2 <- memoise(ots_create_tidy_data)
 
 formatear_monto <- function(monto){
     
     paste("$", comma(monto/1e6, accuracy = .01), "MM")
     
 }
-
 
 lista_paises <- setNames(
   ots_countries$country_iso,
@@ -21,22 +23,22 @@ lista_paises <- setNames(
 
 
 ui <- fluidPage(
-    theme = shinytheme("cyborg"), 
-    titlePanel("Ahora si que sí"),
-    sidebarLayout(
-        sidebarPanel(
-            selectInput(
-                "pais",
-                "Seleccionar un país:",
-                choices = lista_paises,
-                selected = "chl"
-                ),
-            checkboxInput("log", label = "Escala en log")
-        ),
-        mainPanel(
-          plotlyOutput("grafico"),
-          tableOutput("tabla")
-        )
+    theme = shinytheme("paper"), 
+    titlePanel("¿Qué más podemos hacer?"),
+    fluidRow(
+      class = "well",
+      column(
+        width = 4,
+        selectInput("pais", NULL, choices = lista_paises, selected = "chl", width = "100%")
+      ),
+      column(
+        width = 2,
+        checkboxInput("log", label = "Escala en log")
+      )
+    ),
+    fluidRow(
+      column(width = 8, highchartOutput("grafico", height = 600)),
+      column(width = 4, dataTableOutput("tabla", height = 600))
     )
 )
 
@@ -47,15 +49,27 @@ server <- function(input, output) {
       
       pais <- input$pais
       
-      data <- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+      data <- ots_create_tidy_data2(years = 1990:2018, reporters = pais, table = "yr")
+      
+      data <- as_tibble(data)
+      
+      data <- data %>% 
+        mutate(export_value_usd = export_value_usd/1e6)
       
       data
       
     })
     
-    output$tabla <- renderTable({ dataExport()  })
+    output$tabla <- renderDataTable({
+      data <- dataExport()  
+      
+      data %>% 
+        select(Año = year, Exportaciones = export_value_usd) %>% 
+        datatable(rownames = NULL, options = list(dom = 't')) %>% 
+        formatCurrency(2, '$ USD ')
+    })
 
-    output$grafico <- renderPlotly({
+    output$grafico <- renderHighchart({
         
         data <- dataExport()
         
@@ -66,30 +80,31 @@ server <- function(input, output) {
         
         dfpred <- as.data.frame(prediccion)
         dfpred <- dfpred %>% 
-          mutate(anio = 2018 + 1:5)
+          mutate(anio = 2018 + 1:5) 
         
-        plt <- ggplot(data) +
-          geom_line(aes(x = year, y = export_value_usd)) +
-          geom_line(aes(x = anio, y = `Point Forecast`), data = dfpred, color = "darkred", size  = 1.2) +
-          geom_ribbon(
-            aes(x = anio, ymin = `Lo 95`, ymax = `Hi 95`),
-            data = dfpred, 
-            alpha = 0.25
-            ) +
-            scale_y_continuous(labels = formatear_monto) +
-            labs(
-                x = "Año",
-                y = NULL,
-                subtitle = "Acá va un subtitulo",
-                caption = "Datos provenientes del paquete {tradestatistics}."
-            )
+        taxis <- ifelse(input$log, "logarithmic", "linear")
         
-        if(input$log){
-          plt <- plt + scale_y_log10(labels = formatear_monto)
-        }
+        hchart(data, "line", hcaes(x = year, y = export_value_usd), name = names(which(lista_paises == input$pais))) %>% 
+          hc_add_series(
+            data = dfpred,
+            type = "line",
+            hcaes(x = anio, y = `Point Forecast`), 
+            showInLegend = TRUE,
+            name = "Forecast"
+          ) %>% 
+          hc_add_series(
+            data = dfpred,
+            type = "arearange",
+            hcaes(x = anio, low = `Lo 95`, high = `Hi 95`),
+            linkedTo = ":previous",
+            name = "Intervalo de confianza al 95%",
+            color = hex_to_rgba("gray", .05),
+            zIndex = -1
+          ) %>% 
+          hc_yAxis(type = taxis, title = list(text = "Exportaciones (MM)"), min = 0) %>% 
+          hc_add_theme(hc_theme_smpl()) %>% 
+          hc_tooltip(valueDecimals = 2, valueSuffix = " Millones", shared = TRUE)
         
-        ggplotly(plt)
-      
     })
     
 }
