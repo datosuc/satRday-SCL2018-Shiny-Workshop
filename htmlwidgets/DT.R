@@ -1,0 +1,3 @@
+library(DT)
+
+datatable(iris)

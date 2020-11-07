@@ -19,4 +19,3 @@ p +
   
 plotly::ggplotly(p)
   
-  
