@@ -1219,19 +1219,8 @@ gran_funcion &lt;- function(valor){
 }
 
 gran_funcion(1)
-```
 
-```
-## [1] 2
-```
-
-```r
 system.time({gran_funcion(1)})
-```
-
-```
-##    user  system elapsed 
-##    0.02    0.00   10.03
 ```
 
 ---
@@ -1248,40 +1237,12 @@ library(memoise)
 gran_funcion_memoizada &lt;- memoise(gran_funcion)
 
 gran_funcion_memoizada(1)
-```
 
-```
-## [1] 2
-```
-
-```r
 gran_funcion_memoizada(1) == gran_funcion(1)
-```
 
-```
-## [1] TRUE
-```
-
-```r
 system.time({gran_funcion_memoizada(1)})
-```
 
-```
-##    user  system elapsed 
-##       0       0       0
-```
-
-```r
 gran_funcion_memoizada
-```
-
-```
-## Memoised Function:
-## function(valor){
-##   Sys.sleep(sample(5:10, size = 1))
-##   2 * valor 
-## }
-## &lt;bytecode: 0x0000000017a7c8b8&gt;
 ```
 
 
@@ -1319,55 +1280,108 @@ class: center, middle, inverse
 
 Con el siguiente script:
 
-
 .code70[
 
 ```r
 if(!require(tidyverse)) install.packages("tidyverse")
-if(!require(mindicador)) install.packages("mindicador")
-if(!require(highcharter)) install.packages("highcharter")
-if(!require(DT)) install.packages("DT")
+if(!require(jsonlite))  install.packages("jsonlite")
 
-library(tidyverse); library(lubridate); library(ggplot2)
+obtener_indicadores &lt;- function(empresa = "FALABELLA") {
+  
+  url &lt;- stringr::str_c(
+    "https://www.elmercurio.com/inversiones/json/json.aspx?categoria=",
+    empresa, "&amp;time=10&amp;indicador=2")
+  
+  df &lt;- jsonlite::read_json(url)$Data %&gt;% 
+    stringr::str_split(";") %&gt;% 
+    dplyr::first() %&gt;% 
+    readr::read_delim(delim = ",", col_names = c("fecha", "precio", "vol"))
+  
+  df &lt;- df %&gt;% 
+    mutate(fecha = lubridate::ymd_hms(fecha), anio = lubridate::year(fecha))
+  
+  df
+  
+}
 
-d &lt;- mindicador::mindicador_importar_datos("uf", anios = 2015:2020)
+d &lt;- obtener_indicadores("FALABELLA")
 
-hchart(d, "line", hcaes(fecha, valor)) 
+d %&gt;% 
+  group_by(anio) %&gt;% 
+  summarise(mean(precio))
 
-ggplot(d) +
-  geom_line(aes(fecha, valor))
-
-dres &lt;- d %&gt;% 
-  group_by(year(fecha)) %&gt;% 
-  summarise(valor_mean = mean(valor)) 
-
-d
-
-DT::datatable(d)
+ggplot(d) + geom_line(aes(fecha, precio)) 
 ```
 ]
+
+&lt;!-- .code70[ --&gt;
+&lt;!-- ```{r, eval=FALSE} --&gt;
+&lt;!-- if(!require(tidyverse)) install.packages("tidyverse") --&gt;
+&lt;!-- if(!require(mindicador)) install.packages("mindicador") --&gt;
+&lt;!-- if(!require(highcharter)) install.packages("highcharter") --&gt;
+&lt;!-- if(!require(DT)) install.packages("DT") --&gt;
+
+&lt;!-- library(tidyverse); library(lubridate); library(ggplot2) --&gt;
+
+&lt;!-- d &lt;- mindicador::mindicador_importar_datos("uf", anios = 2015:2020) --&gt;
+
+&lt;!-- hchart(d, "line", hcaes(fecha, valor))  --&gt;
+
+&lt;!-- ggplot(d) + --&gt;
+&lt;!--   geom_line(aes(fecha, valor)) --&gt;
+
+&lt;!-- dres &lt;- d %&gt;%  --&gt;
+&lt;!--   group_by(year(fecha)) %&gt;%  --&gt;
+&lt;!--   summarise(valor_mean = mean(valor))  --&gt;
+
+&lt;!-- d --&gt;
+
+&lt;!-- DT::datatable(d) --&gt;
+&lt;!-- ``` --&gt;
+&lt;!-- ] --&gt;
 
 ---
 
 # Cree una shinyapp que:
 
-- Le permita al usuario escoger que indicador a estudiar.
+- Le permita al usuario escoger que empresa estudiar.
 - La aplicación debe mostrar a travéz de un gráfico la variación del indicador
-respecto al tiempo.
+algun dato asociado a la empresa respecto al tiempo.
 - Además le debe permitir al usuario la posibilidad de escoger las fechas a visualizar.
 - Mostrar una tabla con los datos utlizados para el gráficos.
 - Utilizar algun paquete para cambiar el look de la aplicación.
 - Finalmente utilice el servicio gratuiro de shinyapps.io para publicar la aplicación.
 
 Importante/hints:
-- No se pide ningún paquete en particular, pero el ir utilizando más paquetes _pomposos_
-otorgará puntos los que pueden ayudar a compensar puntos no terminados. 
-- Puede revisar la lista de indicadores con `mindicador::mindicador_indicadores$codigo`.
-- recuerde que existe `dateInput` y `dateRangeInput`.
+No se pide ningún paquete en particular, pero el ir utilizando más paquetes _pomposos_
+otorgará puntos los que pueden ayudar a compensar puntos no terminados. Recuerde que existe `dateInput` y `dateRangeInput`.
 
-Enviar a más tardar el domingo 15 de noviembre el script y el link de la aplicación
-al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección B** Indicando en el cuerpo del mail
+Enviar a más tardar el domingo 29 de noviembre el script y el link de la aplicación
+al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección Reforzamiento** Indicando en el cuerpo del mail
 los integrantes (a lo más 2).
+
+.code50[
+empresas &lt;- c("NUEVAPOLAR", "SMU", "BESALCO", "COPEC", "FALABELLA", "BSANTANDER",  "CMPC", "CHILE", "SQM-B", "ENELAM", "CENCOSUD", "BCI", "LTM",  "ENELCHILE", "SM-CHILE B", "CCU", "PARAUCO", "ITAUCORP", "AGUAS-A",  "COLBUN", "ENTEL", "ECL", "CONCHATORO", "RIPLEY", "AESGENER",  "ANDINA-B", "SONDA", "CAP", "ILC", "SALFACORP", "SECURITY", "VAPORES",  "ENELGXCH", "ANTARCHILE", "BANMEDICA", "EMBONOR-B", "FORUS",  "IAM", "MASISA", "ORO BLANCO", "SK", "SMSAAM")`
+]
+
+
+&lt;!-- - Le permita al usuario escoger que indicador a estudiar. --&gt;
+&lt;!-- - La aplicación debe mostrar a travéz de un gráfico la variación del indicador --&gt;
+&lt;!-- respecto al tiempo. --&gt;
+&lt;!-- - Además le debe permitir al usuario la posibilidad de escoger las fechas a visualizar. --&gt;
+&lt;!-- - Mostrar una tabla con los datos utlizados para el gráficos. --&gt;
+&lt;!-- - Utilizar algun paquete para cambiar el look de la aplicación. --&gt;
+&lt;!-- - Finalmente utilice el servicio gratuiro de shinyapps.io para publicar la aplicación. --&gt;
+
+&lt;!-- Importante/hints: --&gt;
+&lt;!-- - No se pide ningún paquete en particular, pero el ir utilizando más paquetes _pomposos_ --&gt;
+&lt;!-- otorgará puntos los que pueden ayudar a compensar puntos no terminados.  --&gt;
+&lt;!-- - Puede revisar la lista de indicadores con `mindicador::mindicador_indicadores$codigo`. --&gt;
+&lt;!-- - recuerde que existe `dateInput` y `dateRangeInput`. --&gt;
+
+&lt;!-- Enviar a más tardar el domingo 15 de noviembre el script y el link de la aplicación --&gt;
+&lt;!-- al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección B** Indicando en el cuerpo del mail --&gt;
+&lt;!-- los integrantes (a lo más 2).  --&gt;
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
