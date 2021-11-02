@@ -1,7 +1,7 @@
 .title-slide {
-  background-image: url("shiny.png");
-  background-size:  17%, 17%, cover;
-  background-position: 88% 16%, 78% 65%;
+  background-image: url("shiny.png"), url("tidyverse.png"), url("htmltools.png"), url("background2.png");
+  background-size:  10%, 10%, 10%, cover;
+  background-position: 80% 0%, 91% 0%, 85.5% 23%, 10% 0;
   background-repeat: no-repeat;
 }
 

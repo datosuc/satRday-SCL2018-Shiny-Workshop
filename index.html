@@ -3,10 +3,23 @@
   <head>
     <title>Visualizacion de datos con R: Shiny</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Joshua Kunst" />
+    <meta name="author" content="Joshua Kunst Fuentes Claudio Alarcón Ratsch" />
+    <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis-fonts.css" rel="stylesheet" />
+    <script src="libs/fabric/fabric.min.js"></script>
+    <link href="libs/xaringanExtra-scribble/scribble.css" rel="stylesheet" />
+    <script src="libs/xaringanExtra-scribble/scribble.js"></script>
+    <script>document.addEventListener('DOMContentLoaded', function() { window.xeScribble = new Scribble({"pen_color":["#B7410E"],"pen_size":3,"eraser_size":30,"palette":[]}) })</script>
+    <link href="libs/tile-view/tile-view.css" rel="stylesheet" />
+    <script src="libs/tile-view/tile-view.js"></script>
+    <script src="libs/xaringanExtra-webcam/webcam.js"></script>
+    <script id="xaringanExtra-webcam-options" type="application/json">{"width":"200","height":"200","margin":"1em"}</script>
+    <link href="libs/animate.css-xaringan/animate.fade.css" rel="stylesheet" />
+    <script src="libs/freezeframe/freezeframe.min.js"></script>
+    <script src="libs/xaringanExtra-freezeframe/freezeframe-init.js"></script>
+    <script id="xaringanExtra-freezeframe-options" type="application/json">{"selector":"img[src$=\"gif\"]","trigger":"click","overlay":false,"responsive":true,"warnings":true}</script>
     <link rel="stylesheet" href="assets/custom.css" type="text/css" />
   </head>
   <body>
@@ -15,7 +28,7 @@ class: center, middle, inverse, title-slide
 
 # Visualizacion de datos con R: Shiny
 ## Diplomado en Data Science, MatPUC
-### Joshua Kunst
+### Joshua Kunst Fuentes<br/>Claudio Alarcón Ratsch
 
 ---
 
@@ -33,9 +46,8 @@ class: center, middle, inverse
 Asumimos que tenemos conocimiento de como funciona R, paquetes, funciones, etc.
 
 
-No es necesario en `shiny` pero usaremos los paquetes `dplyr` y `ggplot` principalmente
+No es necesario en `shiny` pero usaremos los paquetes `dplyr` y `ggplot2` principalmente
 para hacer manipulación y visualización de los datos
-
 
 Necesitaremos algunos paquetes: 
 
@@ -71,14 +83,23 @@ https://content.cdntwrk.com/files/aT0xMTI0NDEzJnY9MSZpc3N1ZU5hbWU9c2hpbnktc3Bhbm
 
 ---
 
-# Temas a tratar
+# Temas a tratar 
 
-- Aplicación (web)
-- Shiny
+Clase 1
+- Aplicación (web), ejemplos.
+- Introducción a shiny: Interfaz usuario y servidor
 - Layouts
+- Ejercicios
+
+Clase 2
 - HTMLWidgets
-- Templates y disenio
-- Expresiones reactivas, memoización
+- Templates y diseño
+- Más Ejercicios
+
+Clase 3
+- Expresiones reactivas
+- Memoización
+- Más Ejercicios
 
 ---
 
@@ -93,6 +114,8 @@ class: center, middle, inverse
 (Wikipedia:) Herramientas que los usuarios pueden utilizar accediendo 
 a un servidor web a través de internet o de una intranet mediante un navegador.
 
+Puede ser de lo más simple...
+
 
 ![](imgs/miprimerapp.png)
 
@@ -100,10 +123,32 @@ a un servidor web a través de internet o de una intranet mediante un navegador.
 
 # Aplicación Web
 
-App con mas `input`s y `output`s
+Hasta algo más complejo con mas `input`s y `output`s
 
 ![](imgs/otraapp.png)
 
+---
+
+# Ejemplos
+
+&lt;br/&gt;
+
+Algunos simples.
+
+* https://jjallaire.shinyapps.io/shiny-kmeans/
+* https://jbkunst.shinyapps.io/05-arma/ / https://github.com/jbkunst/highcharter-shiny/tree/master/05-arma
+
+&lt;br/&gt;
+
+Otros con más detalle en la parte visual.
+
+* https://jorgehcas1998.shinyapps.io/Dataton-app/ / https://github.com/socapal/dataton-tudinero 
+* https://nz-stefan.shinyapps.io/commute-explorer-2
+
+&lt;br/&gt;
+
+Fuente: Shiny contest https://blog.rstudio.com/2021/06/24/winners-of-the-3rd-annual-shiny-contest/ 
+se le pide a los concursantes compartir el código, todos aprenden!
 
 ---
 
@@ -208,6 +253,42 @@ parámetros otorgados.
 - **No siempre** tendremos que escribirla pues veremos que RStudio
 al crear una shinyApp nos pondrá un botón para _servir_ la aplicación.
 
+
+---
+
+# La estructura de una ShinyApp
+
+&lt;br&gt;
+
+
+```r
+library(shiny)
+
+ui &lt;- fluidPage()                            
+
+server &lt;- function(input, output) {}         
+
+runApp(list(ui = ui, server = server))       
+```
+
+De formar general la aplicación será:
+
+
+```r
+library(shiny)
+# acá se cargarán paquetes y posiblemente también datos
+# necesarios para ui (como definir opciones de inputs)
+
+ui &lt;- fluidPage(
+  # código que da forma a nuestrá aplicación: títulos, secciones, textos, inputs
+)                            
+
+server &lt;- function(input, output) {
+  # toooda la lógica de como interactuan los outputs en función de los inputs
+}         
+```
+
+
 ---
 
 # Ejercicio: Nuestra primer App andando
@@ -222,8 +303,7 @@ library(shiny)
 ui &lt;- fluidPage(
    sidebarLayout(
       sidebarPanel(
-        sliderInput("nrand", "Simulaciones",
-                    min = 50, max = 100, value = 70),
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),
         selectInput("col", "Color", c("red", "blue", "black")),
         checkboxInput("punto", "Puntos:", value = FALSE)
       ),
@@ -303,8 +383,7 @@ class: center, middle, inverse
 ui &lt;- fluidPage(
    sidebarLayout(
       sidebarPanel(
-        sliderInput("nrand", "Simulaciones",
-                    min = 50, max = 100, value = 70),
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),
         selectInput("col", "Color", c("red", "blue", "black")),
         checkboxInput("punto", "Puntos:", value = FALSE)
       ),
@@ -333,8 +412,7 @@ server &lt;- function(input, output) {
 *ui &lt;- fluidPage(
 *  sidebarLayout(
 *     sidebarPanel(
-        sliderInput("nrand", "Simulaciones",                       
-                    min = 50, max = 100, value = 70),
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),
         selectInput("col", "Color", c("red", "blue", "black")),
         checkboxInput("punto", "Puntos:", value = FALSE)
       ),
@@ -369,8 +447,7 @@ con navegación. Más detalles http://shiny.rstudio.com/articles/layout-guide.ht
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-*       sliderInput("nrand", "Simulaciones",
-*                   min = 50, max = 100, value = 70),
+*       sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),
 *       selectInput("col", "Color", c("red", "blue", "black")),
 *       checkboxInput("punto", "Puntos:", value = FALSE)
       ),
@@ -405,8 +482,7 @@ valores de estos inputs sean usados como valores usuales en R en la parte del se
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-        sliderInput("nrand", "Simulaciones",                       
-                    min = 50, max = 100, value = 70),             
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),             
         selectInput("col", "Color", c("red", "blue", "black")),   
         checkboxInput("punto", "Puntos:", value = FALSE)          
       ),
@@ -439,8 +515,7 @@ server &lt;- function(input, output) {
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-        sliderInput("nrand", "Simulaciones",                       
-                    min = 50, max = 100, value = 70),             
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),             
         selectInput("col", "Color", c("red", "blue", "black")),   
         checkboxInput("punto", "Puntos:", value = FALSE)          
       ),
@@ -474,8 +549,7 @@ server &lt;- function(input, output) {
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-        sliderInput("nrand", "Simulaciones",                       
-                    min = 50, max = 100, value = 70),             
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),             
         selectInput("col", "Color", c("red", "blue", "black")),   
         checkboxInput("punto", "Puntos:", value = FALSE)          
       ),
@@ -506,8 +580,7 @@ server &lt;- function(input, output) {
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-        sliderInput("nrand", "Simulaciones",                       
-                    min = 50, max = 100, value = 70),             
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),             
         selectInput("col", "Color", c("red", "blue", "black")),   
         checkboxInput("punto", "Puntos:", value = FALSE)          
       ),
@@ -542,8 +615,7 @@ otras (revisar la sección de outputs en el cheat sheet)
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-        sliderInput("nrand", "Simulaciones",                       
-                    min = 50, max = 100, value = 70),             
+        sliderInput("nrand", "Simulaciones", min = 50, max = 100, value = 70),             
         selectInput("col", "Color", c("red", "blue", "black")),   
         checkboxInput("punto", "Puntos:", value = FALSE)          
       ),
@@ -575,8 +647,7 @@ server &lt;- function(input, output) {
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-        sliderInput(&lt;b&gt;"nrand"&lt;/b&gt;, "Simulaciones",                       
-                    min = 50, max = 100, value = 70),             
+        sliderInput(&lt;b&gt;"nrand"&lt;/b&gt;, "Simulaciones", min = 50, max = 100, value = 70),             
         selectInput("col", "Color", c("red", "blue", "black")),   
         checkboxInput("punto", "Puntos:", value = FALSE)          
       ),
@@ -611,8 +682,7 @@ acceder en el server bajo `input$nrand`
 ui &lt;- fluidPage(                                                                                          
    sidebarLayout(                                                 
       sidebarPanel(                                               
-        sliderInput(&lt;b&gt;"nrand"&lt;/b&gt;, "Simulaciones",                       
-                    min = 50, max = 100, value = 70),             
+        sliderInput(&lt;b&gt;"nrand"&lt;/b&gt;, "Simulaciones", min = 50, max = 100, value = 70),             
         selectInput(&lt;b&gt;"col"&lt;/b&gt;, "Color", c("red", "blue", "black")),   
         checkboxInput(&lt;b&gt;"punto"&lt;/b&gt;, "Puntos:", value = FALSE)          
       ),
@@ -780,8 +850,11 @@ las cuales son fácil de integrar con shiny y también rmarkdown.
 
 Cada paquete HTMLWidget tiene su propio set de funciones, el código utilizado 
 para hacer un gráfico en plotly no es el mismo (pero generalmente muy similar)
-al utilizado en highcharter, echarts4r. 
+al utilizado en highcharter, echarts4r:
 
+- https://plotly.com/r/
+- https://echarts4r.john-coene.com/
+- https://jkunst.com/highcharter/
 
 ---
 
@@ -789,41 +862,57 @@ al utilizado en highcharter, echarts4r.
 
 &lt;br&gt;
 
+Muy común es que dado un código o proceso que hemos programado, lo necesitaremos
+migrar a una shiny app o documento rmarkdown. 
+
+
+Entonces:
+
+&lt;br&gt;
+
 - Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/script-export.R (la siguiente slide tambien lo tiene).
 - Generar una app que tenga como input una lista de países y
 muestre el forecast de las exportaciones de dicho país.
+- Luego utilizar algun HTMLWidget para complementar la aplicación.
 
 ---
 
 # Código
 
-.code70[
+.code60[
 
 ```r
 if(!require(forecast)) install.packages("forecast")
-if(!require(xts)) install.packages("xts")
-if(!require(tradestatistics)) install.packages("tradestatistics")
-if(!require(ggplot2)) install.packages("ggplot2")
+if(!require(xts))      install.packages("xts")
+if(!require(ggplot2))  install.packages("ggplot2")
+if(!require(dplyr))    install.packages("dplyr")
+if(!require(remotes))  install.packages("remotes")
+if(!require(tradestatistics))  remotes::install_github("ropensci/tradestatistics")
 
-library(forecast)
-library(xts)
-library(tradestatistics)
-library(ggplot2)
+library(forecast) # forecast autoplot
+library(xts) # xts
+library(tradestatistics) # ots_create_tidy_data 
+library(ggplot2) # autoplot
+library(dplyr) # glimpse %&gt;% group_by summarise
 
-pais &lt;- "chn"  # seteo pais
+pais &lt;- "can"  # seteo pais, usa, can
 
-data &lt;- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
+data &lt;- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yrp")
 
-valores &lt;- data$export_value_usd
-fechas &lt;- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
+glimpse(data)
+
+data &lt;- data %&gt;% 
+  group_by(year, reporter_iso) %&gt;% 
+  summarise(exportaciones = sum(trade_value_usd_exp))
+
+valores &lt;- data$exportaciones
+
+fechas &lt;- as.Date(paste0(data$year, "0101"), format = "%Y%m%d")
 
 serie &lt;- xts(valores, order.by = fechas) # creo la serie de tiempo para la fucion forecast
 
 prediccion &lt;- forecast(serie, h = 5) # realizo automágicamente una predicción
 
-# IMPORTANTE: estas predicciones no *son las mas mejores* la idea  
-# del ejercicio es imaginar que tenemos un proceso el 
-# cual transformaremos en una app
 autoplot(prediccion)
 ```
 ]
@@ -967,11 +1056,17 @@ ui &lt;- dashboardPage(
 
 # Más y más templates y diseños
 
+&lt;br/&gt;
+
+Existen muchos paquetes para cambiar estilos/css.
+
 - shinydashboardPlus: https://rinterface.com/shiny/shinydashboardPlus/
 - bs4Dash: https://rinterface.com/shiny/bs4Dash/classic/
 - miniUI2Demo: https://dgranjon.shinyapps.io/miniUI2Demo
 - tablerDash: https://rinterface.com/shiny/tablerDash/
 
+Notar que estos paquetes cambian solos el diseño de la interfaz, como textos,
+colores, o botones, pero los gráficos quedan intactos. Existe  https://rstudio.github.io/thematic/index.html que corrige
 
 ---
 
@@ -1047,14 +1142,15 @@ el eje en escala logaritmica
 
 .code60[
 ```r
-library(shiny)
-library(forecast)
-library(xts)
-library(tradestatistics)
-library(ggplot2)
-library(scales)
-library(plotly)
-library(shinythemes)
+library(shiny) # fluidPage titlePanel sidebarLayout sidebarPanel selectInput checkboxInput mainPanel shinyApp
+library(forecast) # forecast %&gt;%
+library(xts) # xts
+library(tradestatistics) # ots_create_tidy_data
+library(dplyr) # %&gt;% mutate
+library(ggplot2) # ggplot geom_line aes geom_ribbon scale_y_continuous labs scale_y_log10
+library(scales) # comma
+library(plotly) # plotlyOutput renderPlotly ggplotly 
+library(shinythemes) # shinytheme
 
 formatear_monto &lt;- function(monto){
     paste("$", comma(monto/1e6, accuracy = .01), "MM")
@@ -1090,7 +1186,8 @@ server &lt;- function(input, output) {
     output$grafico &lt;- renderPlotly({
         pais &lt;- input$pais
         data &lt;- ots_create_tidy_data(years = 1990:2018, reporters = pais, table = "yr")
-        valores &lt;- data$export_value_usd
+        data &lt;- mutate(data, year = as.numeric(year))
+        valores &lt;- data$trade_value_usd_exp
         fechas &lt;- as.Date(paste0(data$year, "0101"), format = "%Y%m%d",)
         serie &lt;- xts(valores, order.by = fechas) 
         prediccion &lt;- forecast(serie, h = 5) 
@@ -1098,7 +1195,7 @@ server &lt;- function(input, output) {
         dfpred &lt;- dfpred %&gt;% mutate(anio = 2018 + 1:5)
         
         plt &lt;- ggplot(data) +
-          geom_line(aes(x = year, y = export_value_usd)) +
+          geom_line(aes(x = year, y = trade_value_usd_exp)) +
           geom_line(aes(x = anio, y = `Point Forecast`), data = dfpred, color = "darkred", size  = 1.2) +
           geom_ribbon(aes(x = anio, ymin = `Lo 95`, ymax = `Hi 95`), data = dfpred, alpha = 0.25) +\
           scale_y_continuous(labels = formatear_monto) +
@@ -1116,7 +1213,6 @@ server &lt;- function(input, output) {
 }
 
 shinyApp(ui = ui, server = server)
-
 ```
 ]
 
@@ -1382,6 +1478,7 @@ empresas &lt;- c("NUEVAPOLAR", "SMU", "BESALCO", "COPEC", "FALABELLA", "BSANTAND
 &lt;!-- Enviar a más tardar el domingo 15 de noviembre el script y el link de la aplicación --&gt;
 &lt;!-- al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección B** Indicando en el cuerpo del mail --&gt;
 &lt;!-- los integrantes (a lo más 2).  --&gt;
+
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
