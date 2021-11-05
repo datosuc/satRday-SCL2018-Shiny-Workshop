@@ -1,7 +1,7 @@
 ---
 title: "Visualizacion de datos con R: Shiny"
 subtitle: "Diplomado en Data Science, MatPUC"
-author: "Joshua Kunst Fuentes<br/>Claudio Alarcón Ratsch"
+author: "Joshua Kunst Fuentes jbkunst@gmail.com <br/>Claudio Alarcón Ratsch caalarcon1@uc.cl"
 output:
   xaringan::moon_reader:
     lib_dir: libs
@@ -114,7 +114,11 @@ Puede ser de lo más simple...
 
 Hasta algo más complejo con mas `input`s y `output`s
 
-![](imgs/otraapp.png)
+<!-- ![](imgs/otraapp2.png) -->
+
+```{r, out.width = "800px", echo=FALSE}
+knitr::include_graphics("imgs/otraapp2.png")
+```
 
 ---
 
@@ -783,7 +787,7 @@ ui <- fluidPage(
     )
   )
 )
-inf
+
 server <- function(input, output) {
   output$plot <- renderPlot({ hist(rnorm(input$obs)) })
   output$summary <- renderText({ input$obs })
@@ -830,6 +834,66 @@ al utilizado en highcharter, echarts4r:
 - https://plotly.com/r/
 - https://echarts4r.john-coene.com/
 - https://jkunst.com/highcharter/
+
+---
+
+class: center, middle, inverse
+
+# Repaso resumido
+
+---
+
+# Repaso resumido
+
+- Una shiny app consta de dos partes:
+  - `ui` (**u**ser **i**nterface) donde definiremos el lugar de los los `input`s que 
+  el usuario podrá controlar, como también el lugar de donte estarán los `output`s que retornemos.
+  - `server` (**server** XD), donde definiremos que retornaremos en cada output dependiendo de los inputs.
+
+<hr>
+
+- Los inputs de forma general son de la forma `tipoInput("nombreinput", parametros_del_inpout)`, por ejemplo
+`sliderInput("valor", min = 1, max = 10, value = 1)`.
+- En el server accedo al valor del input como `input$nombreinput`. 
+
+
+<hr>
+
+- Un output se define en la interfaz (gráfico, tabla, mapa, texto) con la forma `tipoOutput("nombreoutput")`, por ejemplo si quiero una salida/output tipo gráfico se usa `plotOutput("grafico")`
+- Para enviar un grafico en el server se usa: `output$nombreoutput <- renderTipo({ codigo })`, por ejemplo:
+
+`output$grafico <- renderPlot({ plot(rnorm(input$valor), type = "l") })`
+
+---
+
+# Repaso resumido
+
+<br>
+
+Así nuestra app de repaso quedaría:
+
+```r
+library(shiny)
+
+# Antes del ui y server podemos cargar paquetes
+# o datos que nuestra app usará. No tiene por que ser todo
+# tan simple
+
+ui <- fluidPage(
+  sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1),
+  plotOutput("grafico")
+  )
+
+server <- function(input, output) {
+  output$grafico <- renderPlot({ 
+    plot(rnorm(input$valor), type = "l")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
 
 ---
 
@@ -891,63 +955,6 @@ autoplot(prediccion)
 ```
 ]
 
----
-
-class: center, middle, inverse
-
-# Repaso resumido
-
----
-
-# Repaso resumido
-
-- Una shiny app consta de dos partes:
-  - `ui` (**u**ser **i**nterface) donde definiremos el lugar de los los `input`s que 
-  el usuario podrá controlar, como también el lugar de donte estarán los `output`s que retornemos.
-  - `server` (**server** XD), donde definiremos que retornaremos en cada output dependiendo de los inputs.
-
-<hr>
-
-- Los inputs de forma general son de la forma `tipoInput("nombreinput", parametros_del_inpout)`, por ejemplo
-`sliderInput("valor", min = 1, max = 10, value = 1)`.
-- En el server accedo al valor del input como `input$nombreinput`. 
-
-
-<hr>
-
-- Un output se define en la interfaz (gráfico, tabla, mapa, texto) con la forma `tipoOutput("nombreoutput")`, por ejemplo si quiero una salida/output tipo gráfico se usa `plotOutput("grafico")`
-- Para enviar un grafico en el server se usa: `output$nombreoutput <- renderTipo({ codigo })`, por ejemplo:
-
-`output$grafico <- renderPlot({ plot(rnorm(input$valor), type = "l") })`
-
----
-
-# Repaso resumido
-
-<br>
-
-Así nuestra app de repaso quedaría:
-
-```r
-library(shiny)
-
-# Antes del ui y server podemos cargar paquetes
-# o datos que nuestra app usará. No tiene por que ser todo
-# tan simple
-
-ui <- fluidPage(
-  sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1),
-  plotOutput("grafico")
-  )
-
-server <- function(input, output) {
-  output$grafico <- renderPlot({ 
-    plot(rnorm(input$valor), type = "l")
-  })
-}
-
-shinyApp(ui, server)
-```
 
 ---
 

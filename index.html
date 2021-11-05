@@ -3,7 +3,7 @@
   <head>
     <title>Visualizacion de datos con R: Shiny</title>
     <meta charset="utf-8" />
-    <meta name="author" content="Joshua Kunst Fuentes Claudio Alarcón Ratsch" />
+    <meta name="author" content="Joshua Kunst Fuentes jbkunst@gmail.com  Claudio Alarcón Ratsch caalarcon1@uc.cl" />
     <script src="libs/header-attrs/header-attrs.js"></script>
     <link href="libs/remark-css/default.css" rel="stylesheet" />
     <link href="libs/remark-css/metropolis.css" rel="stylesheet" />
@@ -28,7 +28,7 @@ class: center, middle, inverse, title-slide
 
 # Visualizacion de datos con R: Shiny
 ## Diplomado en Data Science, MatPUC
-### Joshua Kunst Fuentes<br/>Claudio Alarcón Ratsch
+### Joshua Kunst Fuentes <a href="mailto:jbkunst@gmail.com" class="email">jbkunst@gmail.com</a> <br/>Claudio Alarcón Ratsch <a href="mailto:caalarcon1@uc.cl" class="email">caalarcon1@uc.cl</a>
 
 ---
 
@@ -125,11 +125,13 @@ Puede ser de lo más simple...
 
 Hasta algo más complejo con mas `input`s y `output`s
 
-![](imgs/otraapp.png)
+&lt;!-- ![](imgs/otraapp2.png) --&gt;
+
+&lt;img src="imgs/otraapp2.png" width="800px" /&gt;
 
 ---
 
-# Ejemplos
+# Ejemplos para motivarse!
 
 &lt;br/&gt;
 
@@ -808,7 +810,7 @@ ui &lt;- fluidPage(
     )
   )
 )
-inf
+
 server &lt;- function(input, output) {
   output$plot &lt;- renderPlot({ hist(rnorm(input$obs)) })
   output$summary &lt;- renderText({ input$obs })
@@ -855,6 +857,66 @@ al utilizado en highcharter, echarts4r:
 - https://plotly.com/r/
 - https://echarts4r.john-coene.com/
 - https://jkunst.com/highcharter/
+
+---
+
+class: center, middle, inverse
+
+# Repaso resumido
+
+---
+
+# Repaso resumido
+
+- Una shiny app consta de dos partes:
+  - `ui` (**u**ser **i**nterface) donde definiremos el lugar de los los `input`s que 
+  el usuario podrá controlar, como también el lugar de donte estarán los `output`s que retornemos.
+  - `server` (**server** XD), donde definiremos que retornaremos en cada output dependiendo de los inputs.
+
+&lt;hr&gt;
+
+- Los inputs de forma general son de la forma `tipoInput("nombreinput", parametros_del_inpout)`, por ejemplo
+`sliderInput("valor", min = 1, max = 10, value = 1)`.
+- En el server accedo al valor del input como `input$nombreinput`. 
+
+
+&lt;hr&gt;
+
+- Un output se define en la interfaz (gráfico, tabla, mapa, texto) con la forma `tipoOutput("nombreoutput")`, por ejemplo si quiero una salida/output tipo gráfico se usa `plotOutput("grafico")`
+- Para enviar un grafico en el server se usa: `output$nombreoutput &lt;- renderTipo({ codigo })`, por ejemplo:
+
+`output$grafico &lt;- renderPlot({ plot(rnorm(input$valor), type = "l") })`
+
+---
+
+# Repaso resumido
+
+&lt;br&gt;
+
+Así nuestra app de repaso quedaría:
+
+```r
+library(shiny)
+
+# Antes del ui y server podemos cargar paquetes
+# o datos que nuestra app usará. No tiene por que ser todo
+# tan simple
+
+ui &lt;- fluidPage(
+  sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1),
+  plotOutput("grafico")
+  )
+
+server &lt;- function(input, output) {
+  output$grafico &lt;- renderPlot({ 
+    plot(rnorm(input$valor), type = "l")
+  })
+}
+
+shinyApp(ui, server)
+```
+
+
 
 ---
 
@@ -917,63 +979,6 @@ autoplot(prediccion)
 ```
 ]
 
----
-
-class: center, middle, inverse
-
-# Repaso resumido
-
----
-
-# Repaso resumido
-
-- Una shiny app consta de dos partes:
-  - `ui` (**u**ser **i**nterface) donde definiremos el lugar de los los `input`s que 
-  el usuario podrá controlar, como también el lugar de donte estarán los `output`s que retornemos.
-  - `server` (**server** XD), donde definiremos que retornaremos en cada output dependiendo de los inputs.
-
-&lt;hr&gt;
-
-- Los inputs de forma general son de la forma `tipoInput("nombreinput", parametros_del_inpout)`, por ejemplo
-`sliderInput("valor", min = 1, max = 10, value = 1)`.
-- En el server accedo al valor del input como `input$nombreinput`. 
-
-
-&lt;hr&gt;
-
-- Un output se define en la interfaz (gráfico, tabla, mapa, texto) con la forma `tipoOutput("nombreoutput")`, por ejemplo si quiero una salida/output tipo gráfico se usa `plotOutput("grafico")`
-- Para enviar un grafico en el server se usa: `output$nombreoutput &lt;- renderTipo({ codigo })`, por ejemplo:
-
-`output$grafico &lt;- renderPlot({ plot(rnorm(input$valor), type = "l") })`
-
----
-
-# Repaso resumido
-
-&lt;br&gt;
-
-Así nuestra app de repaso quedaría:
-
-```r
-library(shiny)
-
-# Antes del ui y server podemos cargar paquetes
-# o datos que nuestra app usará. No tiene por que ser todo
-# tan simple
-
-ui &lt;- fluidPage(
-  sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1),
-  plotOutput("grafico")
-  )
-
-server &lt;- function(input, output) {
-  output$grafico &lt;- renderPlot({ 
-    plot(rnorm(input$valor), type = "l")
-  })
-}
-
-shinyApp(ui, server)
-```
 
 ---
 
