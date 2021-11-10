@@ -33,25 +33,25 @@ class: center, middle, inverse
 
 # Antes de Partir
 
+La prestación podrá acceder desde https://datosuc.github.io/Visualizacion-de-datos-con-R/#1 y el código fuente, apps, ejemplos en https://github.com/datosuc/Visualizacion-de-datos-con-R/tree/master/apps
+
+<br>
+
 Asumimos que tenemos conocimiento de como funciona R, paquetes, funciones, etc.
 
-
 No es necesario en `shiny` pero usaremos los paquetes `dplyr` y `ggplot2` principalmente
-para hacer manipulación y visualización de los datos
+para hacer manipulación y visualización de los datos.
 
 Necesitaremos algunos paquetes: 
-
 
 ```{r, eval=FALSE}
 install.packages(
   c("tidyverse", "shiny", "shinythemes", "shinyWidgets",
-    "shinydashboard", "DT", "leaflet", "plotly")
+    "shinydashboard", "DT", "leaflet", "plotly", "highcharter")
   )
 ```
 
 
-La prestación podrá acceder desde https://github.com/datosuc/Visualizacion-de-datos-con-R y el código fuente,
-apps, ejemplos en https://github.com/datosuc/Visualizacion-de-datos-con-R/tree/master/apps
 
 ---
 
@@ -697,9 +697,9 @@ Haga click en:
 - Ejecutela con _Run App_ e intearctúe
 - Luego modifique y cree una app que contenga:
   - 2 inputs, un `sliderInput` y un `textInput` 
-  - 3 output de tipo texto `textOutput` donde el primer contenga 
+  - 3 outputs de tipo texto `textOutput` donde el primero contenga 
 el valor del primer input, el segundo el valor del segundo input, y el tercero la suma de los
-dos inputs
+dos.
 
 
 Hints importantes:
@@ -834,6 +834,128 @@ al utilizado en highcharter, echarts4r:
 - https://plotly.com/r/
 - https://echarts4r.john-coene.com/
 - https://jkunst.com/highcharter/
+- https://rstudio.github.io/leaflet/
+- https://rstudio.github.io/DT/
+
+---
+
+# Plotly
+
+https://plotly.com/r/
+
+.pull-left[
+```{r plotly, eval=FALSE}
+library(ggplot2)
+library(plotly)
+
+data(iris)
+
+p <- ggplot(iris, aes(Sepal.Length, Sepal.Width)) +
+  geom_point() +
+  geom_smooth(method = "lm") + 
+  facet_wrap(vars(Species))
+
+ggplotly(p)
+```
+]
+
+.pull-right[
+```{r, plotly, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+```
+
+]
+
+
+---
+
+# Highcharter
+
+https://jkunst.com/highcharter/
+
+.pull-left[
+```{r highchart, eval=FALSE}
+library(highcharter)
+library(forecast)
+
+data("AirPassengers")
+
+modelo <- forecast(auto.arima(AirPassengers))
+
+hchart(modelo) %>% 
+  hc_add_theme(hc_theme_hcrt()) %>% 
+  hc_navigator(enabled = TRUE) %>% 
+  hc_rangeSelector(enabled = TRUE)
+```
+]
+
+.pull-right[
+```{r, highchart, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+```
+]
+
+---
+
+# DT
+
+- https://rstudio.github.io/DT/
+
+.pull-left[
+```{r dt, eval=FALSE}
+library(DT)
+library(rvest)   # descargar datos de paginas web
+
+url <- "http://www.sismologia.cl/ultimos_sismos.html"
+
+datos <- read_html(url) %>% 
+  html_table() %>% 
+  dplyr::first()
+
+datatable(datos)
+```
+]
+
+.pull-right[
+```{r, dt, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+```
+]
+
+
+
+---
+
+# Leaflet
+
+https://rstudio.github.io/leaflet/
+
+.pull-left[
+```{r leaflet, eval=FALSE}
+library(leaflet)
+library(rvest)   # descargar datos de paginas web
+
+url <- "http://www.sismologia.cl/ultimos_sismos.html"
+
+datos <- read_html(url) %>% 
+  html_table() %>% 
+  dplyr::first()
+
+leaflet(datos) %>%
+  addTiles() %>%  
+  addMarkers(
+    lng = ~Longitud, 
+    lat = ~Latitud,
+    popup = ~as.character(Magnitud),
+    label = ~as.character(`Referencia Geográfica`)
+    )
+```
+]
+
+.pull-right[
+```{r, leaflet, eval=TRUE, echo=FALSE, message=FALSE, warning=FALSE}
+```
+]
+
+
+
 
 ---
 
