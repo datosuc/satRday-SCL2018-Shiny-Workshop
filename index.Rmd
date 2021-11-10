@@ -824,8 +824,6 @@ las cuales son fácil de integrar con shiny y también rmarkdown.
 - Existen una gran cantida de paquetes https://gallery.htmlwidgets.org/
 - Son -entonces- paquetes para complementar nuestra aplicación.
 
-<br>
-
 Cada paquete HTMLWidget tiene su propio set de funciones, el código utilizado 
 para hacer un gráfico en plotly no es el mismo (pero generalmente muy similar)
 al utilizado en highcharter, echarts4r:
@@ -1015,6 +1013,24 @@ server <- function(input, output) {
 
 shinyApp(ui, server)
 ```
+
+---
+
+# Ejercicio grupal: Juntando shiny + htmlwidgets
+
+<br> 
+
+Generar una aplicación que considere los datos
+de los últimos sismos y que contenga:
+
+- Un widget de tabla con DT.
+- Un mapa con leaflet graficando el lugar de los 
+sismos
+- Un slider con el fin de filtrar información.
+
+<br> 
+
+Posible solucion en https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/htmlwidgets/app.R
 
 
 
