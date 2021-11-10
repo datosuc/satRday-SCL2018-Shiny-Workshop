@@ -74,21 +74,20 @@ https://content.cdntwrk.com/files/aT0xMTI0NDEzJnY9MSZpc3N1ZU5hbWU9c2hpbnktc3Bhbm
 
 # Temas a tratar 
 
-Clase 1
+### Clase 1
 - Aplicación (web), ejemplos.
 - Introducción a shiny: Interfaz usuario y servidor
 - Layouts
-- Ejercicios
 
-Clase 2
+### Clase 2
 - HTMLWidgets
 - Templates y diseño
-- Más Ejercicios
+- Compartir una app
 
-Clase 3
+### Clase 3
 - Expresiones reactivas
 - Memoización
-- Más Ejercicios
+
 
 ---
 
@@ -1169,7 +1168,7 @@ Existen muchos paquetes para cambiar estilos/css.
 - tablerDash: https://rinterface.com/shiny/tablerDash/
 
 Notar que estos paquetes cambian solos el diseño de la interfaz, como textos,
-colores, o botones, pero los gráficos quedan intactos. Existe  https://rstudio.github.io/thematic/index.html que corrige
+colores, o botones, pero los gráficos quedan intactos. Existe  https://rstudio.github.io/thematic/index.html. 
 
 ---
 
@@ -1207,10 +1206,63 @@ class: center, middle, inverse
 
 <br> 
 
-La forma más sencilla de compartir una app es:
+Existen dos formas simples/sencillas para compartir una aplicación. Es decir
+que sea visible en otros dispositivos pc/móviles. Luego existen otras 
+que requieren de mayor conocimiento técnico.
 
-- Crear una cuenta en https://www.shinyapps.io/ (puedes asociar tu correo gmail)
-- Luego crear una app.
+### Vía IP local
+
+Permite que tu pc sirva la aplicación y pueda ser visible 
+
+### Servicio shinyapps.io
+
+Permite que otro pc (una máquina virtual) sirva tu apliación y la exponga 
+con una url pública. Ejemplo https://usuario.shinyapps.io/nombreapp.
+
+### Otras
+
+Como por ejemplo arrendar una máquina virtual linode/digitalocean/aws e 
+instalar shinyserver.
+
+---
+
+# Vía IP local
+
+- Solamente funciona para redes locales (casa/trabajo).
+- Requiere que _nuestro_ pc esté encendido para que la app corra.
+
+<br> 
+
+Básicamente se obtiene la IP a través de una instrucción y luego
+se especifica correr la aplicación con dicha IP. Se deberá cambiar:
+
+```{r, eval=FALSE}
+shinyApp(ui = ui, server = server)
+```
+
+Por:
+
+```{r, eval=FALSE}
+# esto es en windows
+ip <- gsub(".*? ([[:digit:]])", "\\1", system("ipconfig", intern=T)[grep("IPv4", system("ipconfig", intern = T))])
+
+shinyApp(ui = ui, server = server, options = list(host = ip))
+```
+
+
+---
+
+# Servicio shinyapps.io
+
+- Básicamente sube todo lo que está en la carpeta de la aplicación archivos R y **otros** 
+a una máquina virtual y detecta los paquetes utilizados.
+- La versión gratuita tienes horas de uso que se van recuperando cada mes. Está
+máquina virtual es humilde en términos de recursos, puede ser lenta dependiendo
+del uso.
+
+
+Primero se debe una cuenta en https://www.shinyapps.io/ (puedes asociar tu correo gmail).
+Luego crear una app.
 - `rsconnect::deployApp("<ruta_a_la_aplicacion>")`, o:
 
 ![](imgs/publicar_screenshot_1.png)
