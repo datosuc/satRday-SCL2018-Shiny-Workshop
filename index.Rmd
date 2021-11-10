@@ -836,6 +836,8 @@ al utilizado en highcharter, echarts4r:
 - https://rstudio.github.io/leaflet/
 - https://rstudio.github.io/DT/
 
+Ejemplo de uso de script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/R/script-htmlwidgets.R 
+
 ---
 
 # Plotly
@@ -973,8 +975,8 @@ class: center, middle, inverse
 
 <hr>
 
-- Los inputs de forma general son de la forma `tipoInput("nombreinput", parametros_del_inpout)`, por ejemplo
-`sliderInput("valor", min = 1, max = 10, value = 1)`.
+- Los inputs de forma general son de la forma `tipoInput("nombreinput", parametros_del_input)`, por ejemplo
+`sliderInput("valor", label = "Valor", min = 1, max = 10, value = 1)`.
 - En el server accedo al valor del input como `input$nombreinput`. 
 
 
@@ -1030,7 +1032,7 @@ Entonces:
 
 <br>
 
-- Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/script-export.R (la siguiente slide tambien lo tiene).
+- Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/R/script-exportaciones.R (la siguiente slide tambien lo tiene).
 - Generar una app que tenga como input una lista de países y
 muestre el forecast de las exportaciones de dicho país.
 - Luego utilizar algun HTMLWidget para complementar la aplicación.
