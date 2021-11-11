@@ -1025,8 +1025,12 @@ de los últimos sismos y que contenga:
 
 - Un widget de tabla con DT.
 - Un mapa con leaflet graficando el lugar de los 
-sismos
+sismos.
 - Un slider con el fin de filtrar información.
+
+<br> 
+
+Hint: Leer documentación!
 
 <br> 
 
@@ -1052,6 +1056,8 @@ Entonces:
 - Generar una app que tenga como input una lista de países y
 muestre el forecast de las exportaciones de dicho país.
 - Luego utilizar algun HTMLWidget para complementar la aplicación.
+
+Posible solución en https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/exportaciones/app.R
 
 ---
 
