@@ -91,6 +91,33 @@ https://content.cdntwrk.com/files/aT0xMTI0NDEzJnY9MSZpc3N1ZU5hbWU9c2hpbnktc3Bhbm
 
 ---
 
+# Fechas Evaluacion Publicación/Entrega
+
+
+### Johnson
+
+Lunes 13 de Diciembre / Miércoles 22 de Diciembre
+
+
+### Gauss
+
+Lunes 29 de Noviembre / Miércoles 8 de Diciembre
+
+### Vaughan
+
+Viernes 26 de Noviembre / Domingo 5 de Noviembre
+
+### Turing 
+
+Lunes 29 de Noviembre / Miércoles 8 de Diciembre
+
+### Jackson
+
+Jueves 18 de Noviembre Domingo 28 de Noviembre
+
+
+---
+
 class: center, middle, inverse
 
 # ¿Qué es una __app__(licación) web?
