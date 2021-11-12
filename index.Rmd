@@ -212,7 +212,7 @@ runApp(list(ui = ui, server = server))
 
 <br>
 
-- Se define una interfaz de usuario (user interface). En adelante `ui`
+- Se define una interfaz de usuario (user interface). En adelante `ui`.
 - En este caso es una página fluida vacía `fluidPage()`.
 
 
@@ -1082,7 +1082,7 @@ Entonces:
 - Inspeccionar, ejecutar y modificar el script https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/R/script-exportaciones.R (la siguiente slide tambien lo tiene).
 - Generar una app que tenga como input una lista de países y
 muestre el forecast de las exportaciones de dicho país.
-- Luego utilizar algun HTMLWidget para complementar la aplicación.
+- Luego utilizar algn HTMLWidget para complementar la aplicación.
 
 Posible solución en https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/exportaciones/app.R
 
@@ -1568,50 +1568,50 @@ vector, etc (piense en memoizar `runif`).
 - Recordar que esto no es exclusivo para shiny apps, ni para R.
 
 
----
+<!-- --- -->
 
-class: center, middle, inverse
+<!-- class: center, middle, inverse -->
 
-# Evaluación
+<!-- # Evaluación -->
 
----
+<!-- --- -->
 
-# Evaluación
+<!-- # Evaluación -->
 
-Con el siguiente script:
+<!-- Con el siguiente script: -->
 
-.code70[
-```{r, eval=FALSE}
-if(!require(tidyverse)) install.packages("tidyverse")
-if(!require(jsonlite))  install.packages("jsonlite")
+<!-- .code70[ -->
+<!-- ```{r, eval=FALSE} -->
+<!-- if(!require(tidyverse)) install.packages("tidyverse") -->
+<!-- if(!require(jsonlite))  install.packages("jsonlite") -->
 
-obtener_indicadores <- function(empresa = "FALABELLA") {
-  
-  url <- stringr::str_c(
-    "https://www.elmercurio.com/inversiones/json/json.aspx?categoria=",
-    empresa, "&time=10&indicador=2")
-  
-  df <- jsonlite::read_json(url)$Data %>% 
-    stringr::str_split(";") %>% 
-    dplyr::first() %>% 
-    readr::read_delim(delim = ",", col_names = c("fecha", "precio", "vol"))
-  
-  df <- df %>% 
-    mutate(fecha = lubridate::ymd_hms(fecha), anio = lubridate::year(fecha))
-  
-  df
-  
-}
+<!-- obtener_indicadores <- function(empresa = "FALABELLA") { -->
 
-d <- obtener_indicadores("FALABELLA")
+<!--   url <- stringr::str_c( -->
+<!--     "https://www.elmercurio.com/inversiones/json/json.aspx?categoria=", -->
+<!--     empresa, "&time=10&indicador=2") -->
 
-d %>% 
-  group_by(anio) %>% 
-  summarise(mean(precio))
+<!--   df <- jsonlite::read_json(url)$Data %>%  -->
+<!--     stringr::str_split(";") %>%  -->
+<!--     dplyr::first() %>%  -->
+<!--     readr::read_delim(delim = ",", col_names = c("fecha", "precio", "vol")) -->
 
-ggplot(d) + geom_line(aes(fecha, precio)) 
-```
-]
+<!--   df <- df %>%  -->
+<!--     mutate(fecha = lubridate::ymd_hms(fecha), anio = lubridate::year(fecha)) -->
+
+<!--   df -->
+
+<!-- } -->
+
+<!-- d <- obtener_indicadores("FALABELLA") -->
+
+<!-- d %>%  -->
+<!--   group_by(anio) %>%  -->
+<!--   summarise(mean(precio)) -->
+
+<!-- ggplot(d) + geom_line(aes(fecha, precio))  -->
+<!-- ``` -->
+<!-- ] -->
 
 <!-- .code70[ -->
 <!-- ```{r, eval=FALSE} -->
@@ -1639,29 +1639,29 @@ ggplot(d) + geom_line(aes(fecha, precio))
 <!-- ``` -->
 <!-- ] -->
 
----
+<!-- --- -->
 
-# Cree una shinyapp que:
+<!-- # Cree una shinyapp que: -->
 
-- Le permita al usuario escoger que empresa estudiar.
-- La aplicación debe mostrar a travéz de un gráfico la variación del indicador
-algun dato asociado a la empresa respecto al tiempo.
-- Además le debe permitir al usuario la posibilidad de escoger las fechas a visualizar.
-- Mostrar una tabla con los datos utlizados para el gráficos.
-- Utilizar algun paquete para cambiar el look de la aplicación.
-- Finalmente utilice el servicio gratuiro de shinyapps.io para publicar la aplicación.
+<!-- - Le permita al usuario escoger que empresa estudiar. -->
+<!-- - La aplicación debe mostrar a travéz de un gráfico la variación del indicador -->
+<!-- algún dato asociado a la empresa respecto al tiempo. -->
+<!-- - Además le debe permitir al usuario la posibilidad de escoger las fechas a visualizar. -->
+<!-- - Mostrar una tabla con los datos utlizados para el gráficos. -->
+<!-- - Utilizar algún paquete para cambiar el look de la aplicación. -->
+<!-- - Finalmente utilice el servicio gratuiro de shinyapps.io para publicar la aplicación. -->
 
-Importante/hints:
-No se pide ningún paquete en particular, pero el ir utilizando más paquetes _pomposos_
-otorgará puntos los que pueden ayudar a compensar puntos no terminados. Recuerde que existe `dateInput` y `dateRangeInput`.
+<!-- Importante/hints: -->
+<!-- No se pide ningún paquete en particular, pero el ir utilizando más paquetes _pomposos_ -->
+<!-- otorgará puntos los que pueden ayudar a compensar puntos no terminados. Recuerde que existe `dateInput` y `dateRangeInput`. -->
 
-Enviar a más tardar el domingo 29 de noviembre el script y el link de la aplicación
-al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección Reforzamiento** Indicando en el cuerpo del mail
-los integrantes (a lo más 2).
+<!-- Enviar a más tardar el domingo 29 de noviembre el script y el link de la aplicación -->
+<!-- al correo **jbkunst@gmail.com** con el asunto **Evaluación shiny Sección Reforzamiento** Indicando en el cuerpo del mail -->
+<!-- los integrantes (a lo más 2). -->
 
-.code50[
-empresas <- c("NUEVAPOLAR", "SMU", "BESALCO", "COPEC", "FALABELLA", "BSANTANDER",  "CMPC", "CHILE", "SQM-B", "ENELAM", "CENCOSUD", "BCI", "LTM",  "ENELCHILE", "SM-CHILE B", "CCU", "PARAUCO", "ITAUCORP", "AGUAS-A",  "COLBUN", "ENTEL", "ECL", "CONCHATORO", "RIPLEY", "AESGENER",  "ANDINA-B", "SONDA", "CAP", "ILC", "SALFACORP", "SECURITY", "VAPORES",  "ENELGXCH", "ANTARCHILE", "BANMEDICA", "EMBONOR-B", "FORUS",  "IAM", "MASISA", "ORO BLANCO", "SK", "SMSAAM")`
-]
+<!-- .code50[ -->
+<!-- empresas <- c("NUEVAPOLAR", "SMU", "BESALCO", "COPEC", "FALABELLA", "BSANTANDER",  "CMPC", "CHILE", "SQM-B", "ENELAM", "CENCOSUD", "BCI", "LTM",  "ENELCHILE", "SM-CHILE B", "CCU", "PARAUCO", "ITAUCORP", "AGUAS-A",  "COLBUN", "ENTEL", "ECL", "CONCHATORO", "RIPLEY", "AESGENER",  "ANDINA-B", "SONDA", "CAP", "ILC", "SALFACORP", "SECURITY", "VAPORES",  "ENELGXCH", "ANTARCHILE", "BANMEDICA", "EMBONOR-B", "FORUS",  "IAM", "MASISA", "ORO BLANCO", "SK", "SMSAAM")` -->
+<!-- ] -->
 
 
 <!-- - Le permita al usuario escoger que indicador a estudiar. -->
@@ -1669,7 +1669,7 @@ empresas <- c("NUEVAPOLAR", "SMU", "BESALCO", "COPEC", "FALABELLA", "BSANTANDER"
 <!-- respecto al tiempo. -->
 <!-- - Además le debe permitir al usuario la posibilidad de escoger las fechas a visualizar. -->
 <!-- - Mostrar una tabla con los datos utlizados para el gráficos. -->
-<!-- - Utilizar algun paquete para cambiar el look de la aplicación. -->
+<!-- - Utilizar algún paquete para cambiar el look de la aplicación. -->
 <!-- - Finalmente utilice el servicio gratuiro de shinyapps.io para publicar la aplicación. -->
 
 <!-- Importante/hints: -->
