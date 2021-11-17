@@ -1322,7 +1322,7 @@ Luego crear una app.
 
 ---
 
-# Repaso: orden dn ejecución: Una vez 
+# Repaso: orden de ejecución: Una vez 
 
 <style>
 
@@ -1357,7 +1357,7 @@ knitr::include_graphics("imgs/run-once-per-user.png")
 
 ---
 
-# Repaso orden dn ejecución: Muchas veces
+# Repaso orden de ejecución: Muchas veces
 
 .center2[
 ```{r echo = FALSE}
