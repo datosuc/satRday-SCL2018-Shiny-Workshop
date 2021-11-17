@@ -138,13 +138,15 @@ Puede ser de lo más simple...
 
 # Aplicación Web
 
-Hasta algo más complejo con mas `input`s y `output`s
+Hasta algo más complejo con más `input`s y `output`s
 
 <!-- ![](imgs/otraapp2.png) -->
 
+.center[
 ```{r, out.width = "800px", echo=FALSE}
 knitr::include_graphics("imgs/otraapp2.png")
 ```
+]
 
 ---
 
