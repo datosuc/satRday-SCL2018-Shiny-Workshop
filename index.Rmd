@@ -1384,6 +1384,8 @@ de la comuna seleccionada.
 - Evaluar agregar más outputs.
 - Subir una aplicación a shinyapps.io
 
+Solución propuesta https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/puntos-bip/app.R
+
 ---
 
 class: center, middle, inverse

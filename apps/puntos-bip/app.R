@@ -24,7 +24,7 @@ datos <- clean_names(datos)
 opciones_comuna  <- unique(datos$comuna)
 
 ui <- fluidPage(
-  theme = shinytheme("cyborg"),
+  theme = shinytheme("paper"),
     titlePanel("Puntos Bip!"),
     sidebarLayout(
         sidebarPanel(
@@ -51,7 +51,7 @@ server <- function(input, output) {
   
   # definir expresión reactiva
   data_comunas <- reactive({
-    Sys.sleep(5)
+    # Sys.sleep(5)
     dcomuna <- datos %>% 
       filter(comuna == input$comuna)
     dcomuna
