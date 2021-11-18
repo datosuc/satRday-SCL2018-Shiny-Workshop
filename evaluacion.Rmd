@@ -1,0 +1,119 @@
+---
+title: "Evaluación Visualización de Datos con Shiny"
+author: "Joshua Kunst Fuentes jbkunst@gmail.com<br/>Claudio Alarcón Ratsch caalarcon1@uc.cl"
+date: "<small>Segundo semestre 2021</small>"
+output:
+  prettydoc::html_pretty:
+    theme: leonids
+    highlight: github
+---
+
+```{css, echo=FALSE}
+.cover-card .author_name {
+    display: block;
+    color: #75AADB;
+}
+
+a {
+    text-decoration: none;
+    color: #75AADB;
+}
+
+code {
+    color: #75AADB;
+}
+
+th {
+    background-color: #75AADB;
+}
+```
+
+
+#### Introducción
+
+El siguiente código contiene la definicón de la función <code>obtener_indicadores()</code>, la cual permite descargar datos de inversiones desde la web de <u><a href="https://www.elmercurio.com/inversiones/">El Mercurio - Inversiones</a></u> a partir del nombre de una empresa del país. El código tambien contiene un ejemplo de utilización de la función,junto a un gráfico de <code>ggplot2</code>:
+
+```{r, message=FALSE, warning=FALSE}
+if(!require(tidyverse)) install.packages("tidyverse")
+if(!require(jsonlite))  install.packages("jsonlite") 
+
+library(tidyverse)
+library(jsonlite)
+
+obtener_indicadores <- function(empresa = "FALABELLA") { 
+  
+  url <- stringr::str_c("https://www.elmercurio.com/inversiones/json/json.aspx?categoria=", 
+                        empresa, "&time=10&indicador=2") 
+  
+  df <- jsonlite::read_json(url)$Data %>% 
+    stringr::str_split(";") %>% 
+    dplyr::first() %>%
+    I() %>% 
+    readr::read_delim(delim = ",", col_names = c("fecha", "precio", "vol")) 
+  
+  df <- df %>% 
+    mutate(
+      fecha = lubridate::ymd_hms(fecha),
+      anio = lubridate::year(fecha)
+    ) 
+  
+  df 
+  
+} 
+
+d <- obtener_indicadores("FALABELLA") 
+
+glimpse(d)
+
+d %>%
+  group_by(anio) %>% 
+  summarise(mean(precio)) 
+
+ggplot(d) +
+  geom_line(aes(fecha, precio)) 
+
+lista_empresas <- c("NUEVAPOLAR", "SMU", "BESALCO", "COPEC", "FALABELLA", 
+                    "BSANTANDER",  "CMPC", "CHILE", "SQM-B", "ENELAM", "CENCOSUD",
+                    "BCI", "LTM",  "ENELCHILE", "SM-CHILE B", "CCU", "PARAUCO",
+                    "ITAUCORP", "AGUAS-A",  "COLBUN", "ENTEL", "ECL", "CONCHATORO",
+                    "RIPLEY", "AESGENER",  "ANDINA-B", "SONDA", "CAP", "ILC", 
+                    "SALFACORP", "SECURITY", "VAPORES",  "ENELGXCH", "ANTARCHILE",
+                    "BANMEDICA", "EMBONOR-B", "FORUS",  "IAM", "MASISA", "ORO BLANCO", 
+                    "SK", "SMSAAM")
+```
+
+
+#### Evaluación
+
+El objetivo es construir una aplicación que permita al usuario observar en un gráfico la 
+variación del indicador de la empresa seleccionada a través del tiempo.
+
+Usando el código descrito desarrollar una Shiny Web App que pose las siguientes características:
+
+
+- (1 pto.) Disponga la información a través de un layout de _sidebar_ y _mainpanel_.
+- (1 pto.) Posea un input de tipo _select_ para escoger un elemento de `lista_empresas` y otro
+input _range slider_  con el fin de seleccionar años a analizar/graficar (0.5 
+cada input).
+- (1 pto.) Incorporar un diseño con el paquete {shinythemes}.
+- (2 pto.) La aplicación debe considerar salidas/outpus para un gráfico para los datos históricos y la tabla resumida 
+por años (1 pto cada una).
+- (1 pto.) Compartir la aplicación a través del servicio shinyapps.
+
+#### Entrega
+
+El formato de entrega es enviar el script desarrollado y el link de la página de shinyapps.io a 
+través del buzón de tareas de Moodle.
+
+
+#### Fechas de inicio/entrega
+
+En la siguiente tabla se encuentran las diferentes fechas de entrega de la evaluación de Shiny según sección:
+
+| Sección | Fecha Inicio | Fecha Entrega |
+| :------ | :----------- | :------------ |
+|**Johnson** |Lunes 13 de Diciembre | Miércoles 22 de Diciembre |
+|**Gauss** | Lunes 29 de Noviembre | Miércoles 8 de Diciembre |
+|**Vaughan** | Viernes 26 de Noviembre | Domingo 5 de Noviembre |
+|**Turing **| Lunes 29 de Noviembre | Miércoles 8 de Diciembre |
+|**Jackson** | Jueves 18 de Noviembre | Domingo 28 de Noviembre |
