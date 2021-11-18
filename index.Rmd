@@ -1374,15 +1374,17 @@ knitr::include_graphics("imgs/run-many-times.png")
 
 <br>
 
-- Cree un proyecto en RStudio y una shinyapp.
-- Descargue el archivo http://datos.gob.cl/dataset/28198 (puntos bip, si es que el link se rompe)
-- Procese el archivo anterior para obtener un .rds o un csv más limpio.
-- Ahora que su aplicación considere tener un selector de comunas, y que su 
+- Cree un **proyecto** en RStudio y seleccione crear una Shiny App.
+- Descargue:
+  - Puntos bip! http://datos.gob.cl/dataset/28198 
+  - GTFS (?) del transantiago https://www.dtpm.cl/index.php/noticias/gtfs-vigente
+- Importe los datos de puntos bips en R. Limpiarlos si es necesario.
+- Cree una aplicación que tenga un selector de comunas, y que su 
 aplicación retorne un mapa con las ubicaciones de los lugares de cargasbip
 de la comuna seleccionada.
 - Agregar un thema shinythemes/thematic.
-- Evaluar agregar más outputs.
-- Subir una aplicación a shinyapps.io
+- Evaluar agregar más outputs, o enriquecer el mapa.
+- Subir la aplicación a shinyapps.io
 
 Solución propuesta https://github.com/datosuc/Visualizacion-de-datos-con-R/blob/master/apps/puntos-bip/app.R
 
