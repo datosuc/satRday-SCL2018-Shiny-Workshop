@@ -5,6 +5,9 @@
   background-repeat: no-repeat;
 }
 
+.title       > h1, 
+.subtitle    > h2,
+.author      > h3,
 .title-slide > h1,
 .title-slide > h2,
 .title-slide > h3 {

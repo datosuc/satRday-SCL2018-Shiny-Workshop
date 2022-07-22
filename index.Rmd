@@ -1,6 +1,6 @@
 ---
 title: "Visualizacion de datos con R: Shiny"
-subtitle: "Diplomado en Data Science, MatPUC"
+subtitle: "Diplomado en Data Science 22, MatPUC"
 author: "Joshua Kunst Fuentes jbkunst@gmail.com <br/>Claudio Alarcón Ratsch caalarcon1@uc.cl"
 output:
   xaringan::moon_reader:
@@ -24,6 +24,38 @@ xaringanExtra::use_animate_all("fade")
 xaringanExtra::use_freezeframe() # for GIFs!
 # xaringanExtra::use_progress_bar(color = "red", location = "bottom", height = "30px")
 ```
+
+# Clases
+
+### Johnson 
+
+Jue 21/7 - Sáb 23/7 - Jue 28/7 - Jue 4/8
+
+
+### Touring
+
+Mie 27/7 - Mie 02/8 - Mie 10/8 - Mie 17/8
+
+
+---
+
+# Programa
+
+- Clase 1
+  - Aplicación (web), ejemplos.
+  - Introducción a shiny: Interfaz usuario y servidor
+  - Layouts  
+- Clase 2
+  - Integración HTMLWidgets
+  - Templates y diseño  
+- Clase 3
+  - Ejercicios
+  - Compartir una app
+- Clase 4
+  - Expresiones reactivas
+  - Extensiones shiny
+
+---
 
 class: center, middle, inverse
 
@@ -51,69 +83,22 @@ install.packages(
   )
 ```
 
-
-
 ---
 
 # Ayuda
 
 No olvidar que una buena forma de aprender es con la documentación oficial:
 
-
+- https://mastering-shiny.org/ (proceso de traducción al español https://github.com/cienciadedatos/mastering-shiny)
 - https://shiny.rstudio.com/tutorial/
 - https://shiny.rstudio.com/tutorial/written-tutorial/lesson1/
 - https://github.com/rstudio/cheatsheets/raw/master/shiny.pdf
 - https://github.com/rstudio/cheatsheets/raw/master/translations/spanish/shiny_Spanish.pdf
 
-La infaltable chuleta: 
+
+La infaltable _ayuda memoria_: 
 
 https://content.cdntwrk.com/files/aT0xMTI0NDEzJnY9MSZpc3N1ZU5hbWU9c2hpbnktc3BhbmlzaCZjbWQ9ZCZzaWc9ZTdhMThkY2VjYzM1YjkyNmI1NTVlNWM3ZWViNjE4MmU%253D
-
-
----
-
-# Temas a tratar 
-
-### Clase 1
-- Aplicación (web), ejemplos.
-- Introducción a shiny: Interfaz usuario y servidor
-- Layouts
-
-### Clase 2
-- HTMLWidgets
-- Templates y diseño
-- Compartir una app
-
-### Clase 3
-- Expresiones reactivas
-- Memoización
-
-
----
-
-# Fechas Evaluacion Publicación/Entrega
-
-
-### Johnson
-
-Lunes 13 de Diciembre / Miércoles 22 de Diciembre
-
-
-### Gauss
-
-Lunes 29 de Noviembre / Miércoles 8 de Diciembre
-
-### Vaughan
-
-Viernes 26 de Noviembre / Domingo 5 de Noviembre
-
-### Turing 
-
-Lunes 29 de Noviembre / Miércoles 8 de Diciembre
-
-### Jackson
-
-Jueves 18 de Noviembre Domingo 28 de Noviembre
 
 
 ---
@@ -157,14 +142,15 @@ knitr::include_graphics("imgs/otraapp2.png")
 Algunos simples.
 
 * https://jjallaire.shinyapps.io/shiny-kmeans/
-* https://jbkunst.shinyapps.io/05-arma/ / https://github.com/jbkunst/highcharter-shiny/tree/master/05-arma
+* https://jbkunst.shinyapps.io/05-arma/ (https://github.com/jbkunst/highcharter-shiny/tree/master/05-arma)
 
 <br/>
 
 Otros con más detalle en la parte visual.
 
-* https://jorgehcas1998.shinyapps.io/Dataton-app/ / https://github.com/socapal/dataton-tudinero 
+* https://jorgehcas1998.shinyapps.io/Dataton-app/ (https://github.com/socapal/dataton-tudinero)
 * https://nz-stefan.shinyapps.io/commute-explorer-2
+
 
 <br/>
 
@@ -925,18 +911,24 @@ hchart(modelo) %>%
 
 # DT
 
-- https://rstudio.github.io/DT/
+https://rstudio.github.io/DT/
 
 .pull-left[
 ```{r dt, eval=FALSE}
 library(DT)
 library(rvest)   # descargar datos de paginas web
 
-url <- "http://www.sismologia.cl/ultimos_sismos.html"
+url <- "https://www.sismologia.cl/sismicidad/catalogo/2022/07/20220721.html"
 
 datos <- read_html(url) %>% 
   html_table() %>% 
-  dplyr::first()
+  dplyr::nth(2) |> 
+  janitor::clean_names() |> 
+  tidyr::separate(
+    latitud_longitud, 
+    into = c("latitud", "longitud"), 
+    sep = " ", convert = TRUE
+    )
 
 datatable(datos)
 ```
@@ -960,19 +952,25 @@ https://rstudio.github.io/leaflet/
 library(leaflet)
 library(rvest)   # descargar datos de paginas web
 
-url <- "http://www.sismologia.cl/ultimos_sismos.html"
+url <- "https://www.sismologia.cl/sismicidad/catalogo/2022/07/20220721.html"
 
 datos <- read_html(url) %>% 
   html_table() %>% 
-  dplyr::first()
+  dplyr::nth(2) |> 
+  janitor::clean_names() |> 
+  tidyr::separate(
+    latitud_longitud, 
+    into = c("latitud", "longitud"), 
+    sep = " ", convert = TRUE
+    )
 
 leaflet(datos) %>%
   addTiles() %>%  
   addMarkers(
-    lng = ~Longitud, 
-    lat = ~Latitud,
-    popup = ~as.character(Magnitud),
-    label = ~as.character(`Referencia Geográfica`)
+    lng = ~longitud, 
+    lat = ~latitud,
+    popup = ~as.character(magnitud_2),
+    label = ~as.character(`fecha_local_lugar`)
     )
 ```
 ]
